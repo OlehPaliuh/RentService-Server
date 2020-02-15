@@ -18,4 +18,5 @@ public class Realty {
     private String address;
 
     private String description;
+    
 }

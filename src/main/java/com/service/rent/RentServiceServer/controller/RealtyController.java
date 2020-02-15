@@ -5,6 +5,7 @@ import com.service.rent.RentServiceServer.service.RealtyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -18,5 +19,10 @@ public class RealtyController {
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<Realty> getAllRealty() {
         return realtyService.getAll();
+    }
+
+    @GetMapping(path = "/{id}")
+    public @ResponseBody Realty getRealtyById(@PathVariable Long id) {
+        return realtyService.getRealtyById(id);
     }
 }

@@ -14,4 +14,8 @@ public class RealtyService {
     public Iterable<Realty> getAll() {
         return realtyRepo.findAll();
     }
+
+    public Realty getRealtyById(Long id) {
+        return realtyRepo.findById(id).get();
+    }
 }
