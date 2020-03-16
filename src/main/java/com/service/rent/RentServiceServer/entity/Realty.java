@@ -1,6 +1,7 @@
 package com.service.rent.RentServiceServer.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Realty {
 
     @Id
@@ -18,5 +20,4 @@ public class Realty {
     private String address;
 
     private String description;
-    
 }

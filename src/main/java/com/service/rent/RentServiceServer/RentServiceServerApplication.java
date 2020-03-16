@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class RentServiceServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(RentServiceServerApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(RentServiceServerApplication.class, args);
+    }
 }

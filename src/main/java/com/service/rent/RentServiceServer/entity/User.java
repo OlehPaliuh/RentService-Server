@@ -1,16 +1,19 @@
 package com.service.rent.RentServiceServer.entity;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Builder
 @Table(name = "users")
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -20,4 +23,25 @@ public class User {
     private String firstName;
 
     private String lastName;
+
+    private String username;
+
+    private String password;
+
+    private String email;
+
+    private boolean isAccountLocked;
+
+    private boolean isAccountDisabled;
+
+    @Column(name = "refresh_token_key", nullable = false)
+    private String refreshTokenKey;
+
+    @ManyToOne
+    @NotNull
+    @JoinColumn(name = "user_role_id")
+    private UserRole userRole;
+
+    public User() {
+    }
 }

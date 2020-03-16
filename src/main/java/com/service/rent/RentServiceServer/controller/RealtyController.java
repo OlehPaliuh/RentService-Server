@@ -17,12 +17,14 @@ public class RealtyController {
     private RealtyService realtyService;
 
     @GetMapping(path = "/all")
-    public @ResponseBody Iterable<Realty> getAllRealty() {
+    public @ResponseBody
+    Iterable<Realty> getAllRealty() {
         return realtyService.getAll();
     }
 
     @GetMapping(path = "/{id}")
-    public @ResponseBody Realty getRealtyById(@PathVariable Long id) {
+    public @ResponseBody
+    Realty getRealtyById(@PathVariable Long id) {
         return realtyService.getRealtyById(id);
     }
 }
