@@ -1,9 +1,9 @@
 package com.service.rent.RentServiceServer.service;
 
 import com.service.rent.RentServiceServer.entity.User;
-import com.service.rent.RentServiceServer.security.JwtRequest;
-import com.service.rent.RentServiceServer.security.JwtResponse;
-import com.service.rent.RentServiceServer.security.JwtTokenUtil;
+import com.service.rent.RentServiceServer.security.dto.JwtRequestDto;
+import com.service.rent.RentServiceServer.security.dto.JwtResponseDto;
+import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,10 +23,10 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public JwtResponse authenticateUser(JwtRequest request) throws Exception {
+    public JwtResponseDto authenticateUser(JwtRequestDto request) throws Exception {
         authenticate(request.getUsername(), request.getPassword());
         final User userDetails = userDetailsService.getByUsername(request.getUsername());
-        return new JwtResponse(jwtTokenUtil.generateAccessToken(userDetails), jwtTokenUtil.generateRefreshToken(userDetails));
+        return new JwtResponseDto(jwtTokenUtil.generateAccessToken(userDetails), jwtTokenUtil.generateRefreshToken(userDetails));
     }
 
     private void authenticate(String username, String password) throws Exception {

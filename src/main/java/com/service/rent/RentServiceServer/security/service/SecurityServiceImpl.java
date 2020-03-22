@@ -1,8 +1,8 @@
 package com.service.rent.RentServiceServer.security.service;
 
 import com.service.rent.RentServiceServer.entity.User;
-import com.service.rent.RentServiceServer.security.JwtResponse;
-import com.service.rent.RentServiceServer.security.JwtTokenUtil;
+import com.service.rent.RentServiceServer.security.dto.JwtResponseDto;
+import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
 import com.service.rent.RentServiceServer.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class SecurityServiceImpl {
     private UserService userService;
 
     @Transactional
-    public JwtResponse updateAccessTokens(String refreshToken)throws Exception{
+    public JwtResponseDto updateAccessTokens(String refreshToken)throws Exception{
         String username;
         try {
             username = jwtTokenUtil.getUsernameFromRefreshToken(refreshToken);
@@ -38,7 +38,7 @@ public class SecurityServiceImpl {
         userService.updateUserRefreshToken(newRefreshTokenKey, user.getId());
         if (jwtTokenUtil.isTokenValid(refreshToken, user.getRefreshTokenKey())) {
             user.setRefreshTokenKey(newRefreshTokenKey);
-            return new JwtResponse(
+            return new JwtResponseDto(
                     jwtTokenUtil.generateAccessToken(user),
                     jwtTokenUtil.generateRefreshToken(user)
             );

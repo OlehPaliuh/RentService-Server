@@ -1,5 +1,6 @@
-package com.service.rent.RentServiceServer.security;
+package com.service.rent.RentServiceServer.security.filter;
 
+import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
 import com.service.rent.RentServiceServer.security.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;

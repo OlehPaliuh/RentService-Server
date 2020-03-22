@@ -1,16 +1,16 @@
-package com.service.rent.RentServiceServer.security;
+package com.service.rent.RentServiceServer.security.dto;
 
 import java.io.Serializable;
 
-public class JwtRequest implements Serializable {
+public class JwtRequestDto implements Serializable {
     private static final long serialVersionUID = 5926468583005150707L;
     private String username;
     private String password;
 
-    public JwtRequest() {
+    public JwtRequestDto() {
     }
 
-    public JwtRequest(String username, String password) {
+    public JwtRequestDto(String username, String password) {
         this.setUsername(username);
         this.setPassword(password);
     }

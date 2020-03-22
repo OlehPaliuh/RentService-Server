@@ -4,7 +4,7 @@ import com.service.rent.RentServiceServer.entity.User;
 import com.service.rent.RentServiceServer.entity.enums.RoleName;
 import com.service.rent.RentServiceServer.repository.UserRepo;
 import com.service.rent.RentServiceServer.repository.UserRoleRepo;
-import com.service.rent.RentServiceServer.security.JwtTokenUtil;
+import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

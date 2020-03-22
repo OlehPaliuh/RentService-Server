@@ -1,4 +1,4 @@
-package com.service.rent.RentServiceServer.security.authentification;
+package com.service.rent.RentServiceServer.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
@@ -6,14 +6,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class JwtUser implements UserDetails {
+public class JwtUserDto implements UserDetails {
     private final Long id;
     private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
     private boolean deactivated;
 
-    public JwtUser(
+    public JwtUserDto(
             Long id,
             String username,
             String password,

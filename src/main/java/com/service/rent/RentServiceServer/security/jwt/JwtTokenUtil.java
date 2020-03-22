@@ -1,4 +1,4 @@
-package com.service.rent.RentServiceServer.security;
+package com.service.rent.RentServiceServer.security.jwt;
 
 import com.service.rent.RentServiceServer.entity.User;
 import io.jsonwebtoken.Claims;
@@ -11,7 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -41,6 +45,10 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    }
+
+    private Claims getAllClaimsFromToken(String token, String secret) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
@@ -80,8 +88,6 @@ public class JwtTokenUtil implements Serializable {
                 .setExpiration(calendar.getTime())
                 .signWith(SignatureAlgorithm.HS256, userDetails.getRefreshTokenKey())
                 .compact();
-//        Map<String, Object> claims = new HashMap<>();
-//        return doGenerateToken(claims, userDetails.getUsername());
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

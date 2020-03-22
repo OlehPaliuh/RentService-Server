@@ -2,7 +2,7 @@ package com.service.rent.RentServiceServer.security.service;
 
 import com.service.rent.RentServiceServer.entity.User;
 import com.service.rent.RentServiceServer.repository.UserRepo;
-import com.service.rent.RentServiceServer.security.authentification.JwtUser;
+import com.service.rent.RentServiceServer.security.dto.JwtUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,7 +30,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> list = new ArrayList<>();
         list.add(new SimpleGrantedAuthority(user.getUserRole().getName().toString()));
 
-        return new JwtUser(
+        return new JwtUserDto(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
