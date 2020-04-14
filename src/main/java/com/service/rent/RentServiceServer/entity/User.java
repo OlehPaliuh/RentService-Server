@@ -1,19 +1,15 @@
 package com.service.rent.RentServiceServer.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Getter
-@Setter
-@Builder
 @Table(name = "users")
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -30,9 +26,15 @@ public class User {
 
     private String email;
 
-    private boolean isAccountLocked;
+    /**
+     * Account is locked
+     */
+    private boolean isLocked;
 
-    private boolean isAccountDisabled;
+    /**
+     * Account is created but not activated OR account is deleted
+     */
+    private boolean isDisabled;
 
     @Column(name = "refresh_token_key", nullable = false)
     private String refreshTokenKey;
@@ -42,6 +44,7 @@ public class User {
     @JoinColumn(name = "user_role_id")
     private UserRole userRole;
 
-    public User() {
-    }
+    @OneToOne(mappedBy = "user")
+    private Account account;
+
 }

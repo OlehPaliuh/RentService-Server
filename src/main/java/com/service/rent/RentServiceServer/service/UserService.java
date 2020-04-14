@@ -37,11 +37,12 @@ public class UserService {
         newUser.setLastName(user.getLastName());
         newUser.setUsername(user.getUsername());
         newUser.setEmail(user.getEmail());
-        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+//        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+        newUser.setPassword(user.getPassword());
         newUser.setUserRole(userRoleRepo.getUserRoleByName(RoleName.ADMIN));
-        newUser.setAccountDisabled(false);
+        newUser.setDisabled(false);
         newUser.setRefreshTokenKey(jwtTokenUtil.generateTokenKey());
-        newUser.setAccountLocked(false);
+        newUser.setLocked(false);
         saveUser(newUser);
     }
 

@@ -1,6 +1,6 @@
 package com.service.rent.RentServiceServer.controller;
 
-import com.service.rent.RentServiceServer.entity.Realty;
+import com.service.rent.RentServiceServer.entity.Apartments;
 import com.service.rent.RentServiceServer.service.RealtyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,13 +20,13 @@ public class RealtyController {
     @GetMapping(path = "/all")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
-    Iterable<Realty> getAllRealty() {
+    Iterable<Apartments> getAllRealty() {
         return realtyService.getAll();
     }
 
     @GetMapping(path = "/{id}")
     public @ResponseBody
-    Realty getRealtyById(@PathVariable Long id) {
+    Apartments getRealtyById(@PathVariable Long id) {
         return realtyService.getRealtyById(id);
     }
 }
