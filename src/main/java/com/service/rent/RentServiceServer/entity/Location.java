@@ -17,10 +17,12 @@ public class Location {
 
     private String city;
     private String country;
+    private String address;
+    private String buildingNumber;
     private String zipCode;
     private String shototam;//shyryna vysota
 
     @OneToOne(mappedBy = "location")
-    private Apartments apartments;
+    private Apartment apartment;
 
 }

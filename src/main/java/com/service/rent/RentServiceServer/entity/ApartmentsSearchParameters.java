@@ -1,15 +1,14 @@
 package com.service.rent.RentServiceServer.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
 @Embeddable
+@Data
 public class ApartmentsSearchParameters {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> regions;

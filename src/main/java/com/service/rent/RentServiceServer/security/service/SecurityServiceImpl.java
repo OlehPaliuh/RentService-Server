@@ -1,9 +1,9 @@
 package com.service.rent.RentServiceServer.security.service;
 
-import com.service.rent.RentServiceServer.entity.User;
+import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.security.dto.JwtResponseDto;
 import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
-import com.service.rent.RentServiceServer.service.UserService;
+import com.service.rent.RentServiceServer.service.AccountService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class SecurityServiceImpl {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
     @Transactional
     public JwtResponseDto updateAccessTokens(String refreshToken)throws Exception{
@@ -26,21 +26,22 @@ public class SecurityServiceImpl {
         } catch (ExpiredJwtException e) {
             throw new Exception("REFRESH_TOKEN_NOT_VALID");
         }
-        User user = userService
+        Account account = accountService
                 .getByUsername(username);
 //              .orElseThrow(() -> new BadEmailException(USER_NOT_FOUND_BY_EMAIL + email));
 
-        if(user == null) {
+        if(account == null) {
             throw new Exception("User not found by username");
         }
 //        checkUserStatus(user);
         String newRefreshTokenKey = jwtTokenUtil.generateTokenKey();
-        userService.updateUserRefreshToken(newRefreshTokenKey, user.getId());
-        if (jwtTokenUtil.isTokenValid(refreshToken, user.getRefreshTokenKey())) {
-            user.setRefreshTokenKey(newRefreshTokenKey);
+        accountService.updateAccountRefreshToken(newRefreshTokenKey, account.getId());
+        if (jwtTokenUtil.isTokenValid(refreshToken, account.getRefreshTokenKey())) {
+            account.setRefreshTokenKey(newRefreshTokenKey);
             return new JwtResponseDto(
-                    jwtTokenUtil.generateAccessToken(user),
-                    jwtTokenUtil.generateRefreshToken(user)
+                    jwtTokenUtil.generateAccessToken(account),
+                    jwtTokenUtil.generateRefreshToken(account),
+                    account.getId()
             );
         }
         throw new Exception("REFRESH_TOKEN_NOT_VALID");

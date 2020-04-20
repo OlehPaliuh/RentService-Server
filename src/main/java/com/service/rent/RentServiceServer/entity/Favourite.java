@@ -1,8 +1,16 @@
 package com.service.rent.RentServiceServer.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,11 +21,14 @@ public class Favourite {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "apartment_id", referencedColumnName = "id")
-    private Apartments apartments;
+    @JoinColumn(name = "apartment_id")
+    private Apartment apartment;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JoinColumn(name = "account_id")
+    @ToString.Exclude
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private Account account;
 
     private LocalDateTime dateTimeCreated;

@@ -1,6 +1,6 @@
 package com.service.rent.RentServiceServer.security.jwt;
 
-import com.service.rent.RentServiceServer.entity.User;
+import com.service.rent.RentServiceServer.entity.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
@@ -65,7 +65,7 @@ public class JwtTokenUtil implements Serializable {
         return expiration.before(new Date());
     }
 
-    public String generateAccessToken(User userDetails) {
+    public String generateAccessToken(Account userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
     }
@@ -76,7 +76,7 @@ public class JwtTokenUtil implements Serializable {
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-    public String generateRefreshToken(User userDetails) {
+    public String generateRefreshToken(Account userDetails) {
         Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();

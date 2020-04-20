@@ -1,14 +1,14 @@
 package com.service.rent.RentServiceServer.security.service;
 
-import com.service.rent.RentServiceServer.entity.User;
-import com.service.rent.RentServiceServer.repository.UserRepo;
+import com.service.rent.RentServiceServer.entity.Account;
+import com.service.rent.RentServiceServer.exception.UserNotFoundException;
+import com.service.rent.RentServiceServer.repository.AccountRepo;
 import com.service.rent.RentServiceServer.security.dto.JwtUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,22 +18,22 @@ import java.util.List;
 public class JwtUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepo userRepo;
+    private AccountRepo accountRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.getUserByUsername(username).orElse(null);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+    public UserDetails loadUserByUsername(String username) throws UserNotFoundException {
+        Account account = accountRepo.getAccountByUsername(username).orElse(null);
+        if (account == null) {
+            throw new UserNotFoundException("User not found with username: " + username);
         }
 
         List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new SimpleGrantedAuthority(user.getUserRole().getName().toString()));
+        list.add(new SimpleGrantedAuthority(account.getRole().getName().toString()));
 
         return new JwtUserDto(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
+                account.getId(),
+                account.getUsername(),
+                account.getPassword(),
                 list,
                 false
         );

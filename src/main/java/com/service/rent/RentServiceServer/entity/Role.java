@@ -1,8 +1,10 @@
 package com.service.rent.RentServiceServer.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.service.rent.RentServiceServer.entity.enums.RoleName;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,18 +19,21 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-public class UserRole {
+@Data
+@ToString
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_role_id")
+    @Column(name = "role_id")
     private Long id;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private RoleName name;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    List<User> users;
+    @ToString.Exclude
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    List<Account> accounts;
 }

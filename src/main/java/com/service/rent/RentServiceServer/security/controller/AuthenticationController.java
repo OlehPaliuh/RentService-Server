@@ -1,10 +1,10 @@
 package com.service.rent.RentServiceServer.security.controller;
 
-import com.service.rent.RentServiceServer.entity.User;
 import com.service.rent.RentServiceServer.security.dto.JwtRequestDto;
+import com.service.rent.RentServiceServer.security.dto.RegisterAccountDto;
 import com.service.rent.RentServiceServer.security.service.SecurityServiceImpl;
-import com.service.rent.RentServiceServer.service.AuthenticationService;
-import com.service.rent.RentServiceServer.service.UserService;
+import com.service.rent.RentServiceServer.security.service.AuthenticationService;
+import com.service.rent.RentServiceServer.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +25,14 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
     @Autowired
     private SecurityServiceImpl securityService;
 
     @PostMapping(path = "/register")
-    public ResponseEntity<Object> registration(@RequestBody User user) throws Exception {
-        if (user != null && userService.getByUsername(user.getUsername()) != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("User with username %s already exist", user.getUsername()));
-        }
-        userService.createUser(user);
+    public ResponseEntity<Object> registration(@RequestBody RegisterAccountDto account) throws Exception {
+        accountService.createAccount(account);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
