@@ -35,5 +35,5 @@ public class Subscription {
 
     private SubscriptionType subscriptionType;
 
-    private boolean active;
+    private boolean isActive;
 }

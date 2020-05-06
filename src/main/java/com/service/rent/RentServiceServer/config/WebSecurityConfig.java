@@ -1,6 +1,7 @@
 package com.service.rent.RentServiceServer.config;
 
 import com.service.rent.RentServiceServer.security.filter.JwtRequestFilter;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {

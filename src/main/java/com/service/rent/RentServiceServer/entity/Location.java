@@ -1,11 +1,15 @@
 package com.service.rent.RentServiceServer.entity;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 @Data
@@ -16,12 +20,45 @@ public class Location {
     private Long id;
 
     private String city;
-    private String country;
-    private String address;
-    private String buildingNumber;
-    private String zipCode;
-    private String shototam;//shyryna vysota
 
+    /**
+     * District of the city
+     */
+    private String sublocality;
+
+    /**
+     * Street name
+     */
+    private String route;
+
+    /**
+     * Building number
+     */
+    private String streetNumber;
+
+    private String country;
+
+    private String political;
+
+    /**
+     * Region
+     */
+    private String administrativeArea;
+
+    /**
+     * Zip code
+     */
+    private String postalCode;
+
+    private double latitude;
+
+    private double longitude;
+
+    private String fullAddress;
+
+    @ToString.Exclude
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @OneToOne(mappedBy = "location")
     private Apartment apartment;
 

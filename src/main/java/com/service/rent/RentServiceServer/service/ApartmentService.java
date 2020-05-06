@@ -2,6 +2,7 @@ package com.service.rent.RentServiceServer.service;
 
 import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.entity.Apartment;
+import com.service.rent.RentServiceServer.entity.Location;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.RoleName;
@@ -20,6 +21,9 @@ public class ApartmentService {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private  LocationService locationService;
+
     public Iterable<Apartment> getAll() {
         return apartmentRepo.findAll();
     }
@@ -30,14 +34,17 @@ public class ApartmentService {
 
     public Apartment createApartment(ApartmentDto newApartment) {
         Apartment apartment = new Apartment();
-        apartment.setName(newApartment.getName1());
+        apartment.setTitle(newApartment.getTitle());
         apartment.setDescription(newApartment.getDescription());
         apartment.setNumberOfRooms(newApartment.getNumberOfRooms());
         apartment.setPrice(newApartment.getPrice());
         apartment.setArea(newApartment.getArea());
-        apartment.setAddress(newApartment.getAddress());
         apartment.setTags(newApartment.getTags());
         apartment.setStatus(ApartmentStatus.CREATED);
+        if(newApartment.getLocation() != null) {
+           Location location = locationService.createLocation(newApartment.getLocation());
+           apartment.setLocation(location);
+        }
         Account account= accountService.getById(newApartment.getAccountId());
         System.out.println(account);
         apartment.setOwner(accountService.getById(newApartment.getAccountId()));

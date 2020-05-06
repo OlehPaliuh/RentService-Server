@@ -29,15 +29,13 @@ public class Apartment {
     @Column(name = "apartment_id")
     private Long id;
 
-    private String name;
+    private String title;
 
     private String description;
 
     private Double price;
 
     private Double area;
-
-    private String address;
 
     private String tags;
 

@@ -1,12 +1,13 @@
 package com.service.rent.RentServiceServer.entity.dto;
 
-import com.service.rent.RentServiceServer.entity.Location;
 import lombok.Data;
 
 @Data
 public class ApartmentDto {
 
-    private String name1;
+    private Long id;
+
+    private String title;
 
     private String description;
 
@@ -14,13 +15,11 @@ public class ApartmentDto {
 
     private Double area;
 
-    private String address;
-
     private String tags;
 
     private Integer numberOfRooms;
 
-    private Location location;
+    private LocationDto location;
 
     private Long accountId;
 }
