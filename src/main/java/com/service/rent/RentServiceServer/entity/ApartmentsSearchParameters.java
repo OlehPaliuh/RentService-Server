@@ -1,17 +1,30 @@
 package com.service.rent.RentServiceServer.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
 
-@Embeddable
+@Entity
 @Data
 public class ApartmentsSearchParameters {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> regions;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
+
+    private boolean deleted;
+
+    private boolean disabled;
+
+    @OneToOne
+    private Subscription subscription;
+    private String regions;
 
     private Integer minNumberOfRooms;
     private Integer maxNumberOfRooms;
@@ -22,9 +35,7 @@ public class ApartmentsSearchParameters {
     private Integer priceLow;
     private Integer priceHigh;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> tags;
+    private String tags;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> searchText;
+    private String searchText;
 }

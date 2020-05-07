@@ -2,20 +2,11 @@ package com.service.rent.RentServiceServer.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
@@ -67,4 +58,7 @@ public class Apartment {
     @ToString.Exclude
     @OneToMany(mappedBy = "apartment")
     private List<Favourite> favouriteList;
+
+    @OneToMany(mappedBy = "apartment")
+    private List<Comment> comments;
 }

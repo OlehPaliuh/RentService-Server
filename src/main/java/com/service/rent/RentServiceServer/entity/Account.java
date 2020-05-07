@@ -1,5 +1,6 @@
 package com.service.rent.RentServiceServer.entity;
 
+import com.service.rent.RentServiceServer.entity.chat.ChatAssignment;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -67,5 +68,6 @@ public class Account {
     @OneToMany(mappedBy = "account")
     private List<Favourite> favouriteList;
 
-
+    @OneToMany
+    private List<ChatAssignment> chatAssignments;
 }
