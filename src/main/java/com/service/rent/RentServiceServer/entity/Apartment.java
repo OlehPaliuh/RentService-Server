@@ -71,6 +71,9 @@ public class Apartment {
     @OneToMany(mappedBy = "apartment")
     private List<Favourite> favouriteList;
 
+    @OneToMany(mappedBy = "apartment")
+    private List<Comment> comments;
+
     @ElementCollection
     private List<String> imageLinks;
 }
