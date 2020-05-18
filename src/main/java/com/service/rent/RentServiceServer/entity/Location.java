@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.search.annotations.Field;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Field
     private String city;
 
     /**
@@ -29,6 +31,7 @@ public class Location {
     /**
      * Street name
      */
+    @Field
     private String route;
 
     /**
@@ -36,6 +39,7 @@ public class Location {
      */
     private String streetNumber;
 
+    @Field
     private String country;
 
     private String political;
@@ -54,6 +58,7 @@ public class Location {
 
     private double longitude;
 
+    @Field
     private String fullAddress;
 
     @ToString.Exclude

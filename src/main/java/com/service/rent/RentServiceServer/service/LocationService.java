@@ -18,10 +18,10 @@ public class LocationService {
             location = new Location();
             location.setLatitude(newLocation.getLatitude());
             location.setLongitude(newLocation.getLongitude());
-            location.setFullAddress(newLocation.getFullAddress());
-            location.setCity(newLocation.getLocality());
+            location.setFullAddress(newLocation.getFullAddress().replace("'", ""));
+            location.setCity(newLocation.getLocality().replace("'", ""));
             location.setSublocality(newLocation.getSublocality());
-            location.setCountry(newLocation.getCountry());
+            location.setCountry(newLocation.getCountry().replace("'", ""));
             location.setAdministrativeArea(newLocation.getAdministrative_area_level_1());
             location.setPolitical(newLocation.getPolitical());
             location.setRoute(newLocation.getRoute());

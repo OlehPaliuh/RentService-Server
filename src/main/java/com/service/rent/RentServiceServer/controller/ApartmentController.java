@@ -32,7 +32,7 @@ public class ApartmentController {
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
     List<ApartmentDto> getAllApartments() {
-        List<Apartment> apartmentList =new ArrayList<>();
+        List<Apartment> apartmentList = new ArrayList<>();
         apartmentService.getAll().iterator().forEachRemaining(apartmentList::add);
         return apartmentList.stream().map(obj -> modelMapper.map(obj, ApartmentDto.class)).collect(Collectors.toList());
     }
@@ -40,7 +40,10 @@ public class ApartmentController {
     @GetMapping(path = "/{id}")
     public @ResponseBody
     ApartmentDto getApartmentById(@PathVariable Long id) {
-        return modelMapper.map(apartmentService.getApartmentById(id), ApartmentDto.class);
+        Apartment apartment = apartmentService.getApartmentById(id);
+        ApartmentDto apartmentDto = modelMapper.map(apartment, ApartmentDto.class);
+        apartmentDto.setAccountId(apartment.getOwner().getId());
+        return apartmentDto;
     }
 
     @PostMapping(path = "/create")

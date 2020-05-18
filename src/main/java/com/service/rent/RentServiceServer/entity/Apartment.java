@@ -5,6 +5,9 @@ import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -24,6 +27,7 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @Entity
+@Indexed
 @Data
 @ToString
 public class Apartment {
@@ -32,8 +36,10 @@ public class Apartment {
     @Column(name = "apartment_id")
     private Long id;
 
+    @Field
     private String title;
 
+    @Field
     private String description;
 
     private Double price;
@@ -65,6 +71,7 @@ public class Apartment {
     @ToString.Exclude
     @OneToOne
     @JoinColumn(name = "location_id")
+    @IndexedEmbedded
     private Location location;
 
     @ToString.Exclude
