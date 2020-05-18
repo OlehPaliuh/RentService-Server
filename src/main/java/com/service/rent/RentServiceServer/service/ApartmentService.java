@@ -24,6 +24,9 @@ public class ApartmentService {
     @Autowired
     private  LocationService locationService;
 
+    @Autowired
+    private ImageService imageService;
+
     public Iterable<Apartment> getAll() {
         return apartmentRepo.findAll();
     }
@@ -41,12 +44,11 @@ public class ApartmentService {
         apartment.setArea(newApartment.getArea());
         apartment.setTags(newApartment.getTags());
         apartment.setStatus(ApartmentStatus.CREATED);
+        apartment.setImageLinks(newApartment.getImageLinks());
         if(newApartment.getLocation() != null) {
            Location location = locationService.createLocation(newApartment.getLocation());
            apartment.setLocation(location);
         }
-        Account account= accountService.getById(newApartment.getAccountId());
-        System.out.println(account);
         apartment.setOwner(accountService.getById(newApartment.getAccountId()));
         return saveApartment(apartment);
     }

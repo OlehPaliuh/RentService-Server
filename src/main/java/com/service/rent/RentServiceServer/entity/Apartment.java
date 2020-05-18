@@ -2,9 +2,12 @@ package com.service.rent.RentServiceServer.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -67,4 +70,7 @@ public class Apartment {
     @ToString.Exclude
     @OneToMany(mappedBy = "apartment")
     private List<Favourite> favouriteList;
+
+    @ElementCollection
+    private List<String> imageLinks;
 }

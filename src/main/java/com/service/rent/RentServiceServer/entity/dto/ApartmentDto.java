@@ -2,6 +2,8 @@ package com.service.rent.RentServiceServer.entity.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ApartmentDto {
 
@@ -22,4 +24,6 @@ public class ApartmentDto {
     private LocationDto location;
 
     private Long accountId;
+
+    private List<String> imageLinks;
 }
