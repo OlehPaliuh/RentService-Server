@@ -1,5 +1,6 @@
 package com.service.rent.RentServiceServer.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.service.rent.RentServiceServer.entity.messenger.ChatAssignment;
 import lombok.Data;
 import lombok.ToString;
@@ -62,17 +63,21 @@ public class Account {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Apartment> ownApartmentList;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<ApartmentOverview> apartmentOverviews;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Subscription> subscriptions;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Favourite> favouriteList;
 
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ChatAssignment> chatAssignments;
 }

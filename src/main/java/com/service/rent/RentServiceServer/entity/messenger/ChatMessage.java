@@ -34,10 +34,10 @@ public class ChatMessage {
     @Enumerated(EnumType.STRING)
     private MessageType messageType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Account sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Chat chat;
 
 }

@@ -1,11 +1,13 @@
 package com.service.rent.RentServiceServer.controller.messenger.dtos;
 
+import com.service.rent.RentServiceServer.entity.messenger.ChatMessage;
 import com.service.rent.RentServiceServer.entity.messenger.ChatType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString
 @Data
@@ -25,4 +27,6 @@ public class ChatDto {
      * Guy with whom you are communicating
      */
     private String username;
+
+    private List<ChatMessage> messages;
 }
