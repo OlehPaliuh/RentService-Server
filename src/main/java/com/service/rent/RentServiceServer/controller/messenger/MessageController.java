@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/messenger")
+@RequestMapping("/api/messenger")
 public class MessageController {
 
     private MessageService messageService;

@@ -3,6 +3,7 @@ package com.service.rent.RentServiceServer.service.messenger;
 import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.entity.messenger.Chat;
 import com.service.rent.RentServiceServer.entity.messenger.ChatAssignment;
+import com.service.rent.RentServiceServer.repository.messenger.ChatAssignmentRepo;
 import com.service.rent.RentServiceServer.repository.messenger.ChatRepo;
 import com.service.rent.RentServiceServer.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,22 +22,29 @@ public class ChatService {
     private ChatRepo chatRepository;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private ChatAssignmentRepo chatAssignmentRepo;
 
     public List<ChatAssignment> getAllByUsername(String username) {
         Account account = accountService.getAccount(username);
         return account.getChatAssignments().stream()
-                      .filter(ass->!ass.getChat().getDeleted())
+                      .filter(ass -> !ass.getChat().getDeleted())
                       .collect(Collectors.toList());
     }
 
-    public Chat createChat(String usernameAuthor, String usernameGuest) {
+    public ChatAssignment createChat(String usernameAuthor, String usernameGuest) {
         Chat chat = new Chat();
         chat.setCreatedAt(LocalDateTime.now());
         chat.setDefaultChatName("Chat");
         chat = chatRepository.save(chat);
-        chat.addChatAssignment(createChatAssignment(chat, usernameAuthor, usernameGuest));
+
+        ChatAssignment authorAssignment = createChatAssignment(chat, usernameAuthor, usernameGuest);
+        chat.addChatAssignment(authorAssignment);
         chat.addChatAssignment(createChatAssignment(chat, usernameGuest, usernameAuthor));
-        return chatRepository.save(chat);
+
+        chatRepository.save(chat);
+
+        return authorAssignment;
     }
 
     private ChatAssignment createChatAssignment(Chat chat, String username, String chatName) {
@@ -46,7 +54,7 @@ public class ChatService {
         chatAssignment.setCreatedAt(LocalDateTime.now());
         chatAssignment.setAccount(accountService.getAccount(username));
 
-        return chatAssignment;
+        return chatAssignmentRepo.save(chatAssignment);
     }
 
 }

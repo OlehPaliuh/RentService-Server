@@ -3,6 +3,7 @@ package com.service.rent.RentServiceServer.entity.messenger;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @EqualsAndHashCode
+@ToString
 //TODO look
 public class Chat {
 

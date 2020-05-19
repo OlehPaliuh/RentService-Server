@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/messenger")
+@RequestMapping("/api/messenger")
 public class ChatController {
     private ChatService chatService;
 
@@ -32,12 +32,10 @@ public class ChatController {
     }
 
 
-    @PostMapping("/{username}/chats/create/")
-    public List<ChatDto> createChat(@PathVariable String username, @RequestParam String withUsername) {
+    @PostMapping("/{username}/chats/create")
+    public ChatDto createChat(@PathVariable String username, @RequestParam String withUsername) {
 
-        return chatService.getAllByUsername(username).stream()
-                          .map(ChatDtoMapper::toDto)
-                          .collect(Collectors.toList());
+        return ChatDtoMapper.toDto(chatService.createChat(username, withUsername));
     }
 
 
