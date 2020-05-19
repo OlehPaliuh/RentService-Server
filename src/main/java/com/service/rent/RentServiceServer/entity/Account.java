@@ -61,18 +61,18 @@ public class Account {
     @Length(max = 13)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private List<Apartment> ownApartmentList;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<ApartmentsOverview> apartmentOverviews;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Subscription> subscriptions;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<Favourite> favouriteList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<ChatAssignment> chatAssignments;
 }

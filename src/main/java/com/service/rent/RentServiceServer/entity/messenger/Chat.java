@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,16 +25,19 @@ public class Chat {
 
     private LocalDateTime modifiedAt;
 
-    private boolean deleted;
+    private Boolean deleted = false;
 
     private String defaultChatName;
 
     private ChatType chatType = ChatType.SIMPLE_CHAT;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
-    private List<ChatMessage> messages;
+    private List<ChatMessage> messages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chat")
-    private List<ChatAssignment> chatAssignments;
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    private List<ChatAssignment> chatAssignments = new ArrayList<>();
 
+    public void addChatAssignment(ChatAssignment chatAssignment) {
+        this.getChatAssignments().add(chatAssignment);
+    }
 }

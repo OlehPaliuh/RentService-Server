@@ -12,7 +12,7 @@ public class ChatDtoMapper {
                                     chatAssignment.getChat().getDefaultChatName() : chatAssignment.getChatName());
 
         chatDto.setCreatedAt(chatAssignment.getChat().getCreatedAt());
-        chatDto.setDeleted(chatAssignment.getChat().isDeleted());
+        chatDto.setDeleted(chatAssignment.getChat().getDeleted());
         String usernameOfGuyWithWhoYouAreCommunicating =
                 chatAssignment.getChat().getChatAssignments().stream()
                               .filter(chAss -> !chAss.getAccount().getUsername().equals(
