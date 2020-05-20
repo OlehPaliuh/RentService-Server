@@ -1,14 +1,10 @@
 package com.service.rent.RentServiceServer.service;
 
-import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.entity.Apartment;
 import com.service.rent.RentServiceServer.entity.Location;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
-import com.service.rent.RentServiceServer.entity.enums.RoleName;
-import com.service.rent.RentServiceServer.exception.UserAlreadyExistException;
 import com.service.rent.RentServiceServer.repository.ApartmentRepo;
-import com.service.rent.RentServiceServer.security.dto.RegisterAccountDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

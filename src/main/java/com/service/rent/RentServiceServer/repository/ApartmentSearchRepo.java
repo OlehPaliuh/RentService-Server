@@ -31,7 +31,13 @@ public class ApartmentSearchRepo {
 
         // Create a Lucene Full Text Query
         org.apache.lucene.search.Query luceneQuery = queryBuilder.bool()
-                .must(queryBuilder.keyword().onFields("title", "description", "location.route", "location.city", "location.country", "location.fullAddress").matching(searchString).createQuery())
+                .must(queryBuilder
+                        .keyword()
+                        .wildcard()
+                        .onFields("title", "description", "location.route", "location.city", "location.country", "location.fullAddress")
+                        .matching("*" + searchString.toLowerCase() + "*")
+                        .createQuery()
+                )
                 .createQuery();
 
         javax.persistence.Query fullTextQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Apartment.class);

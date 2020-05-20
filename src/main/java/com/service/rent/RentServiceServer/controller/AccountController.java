@@ -1,6 +1,7 @@
 package com.service.rent.RentServiceServer.controller;
 
 import com.service.rent.RentServiceServer.entity.dto.AccountDetailsDto;
+import com.service.rent.RentServiceServer.entity.dto.OwnerAccountInfoDto;
 import com.service.rent.RentServiceServer.service.AccountService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,14 @@ public class AccountController {
     @GetMapping(path = "{accountId}")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
-    AccountDetailsDto getAccountById(@PathVariable Long accountId) {
+    AccountDetailsDto getAccountDetailsById(@PathVariable Long accountId) {
         return modelMapper.map(accountService.getById(accountId), AccountDetailsDto.class);
+    }
+
+    @GetMapping(path = "owner/{accountId}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    public @ResponseBody
+    OwnerAccountInfoDto getOwnAccountInfoById(@PathVariable Long accountId) {
+        return modelMapper.map(accountService.getById(accountId), OwnerAccountInfoDto.class);
     }
 }

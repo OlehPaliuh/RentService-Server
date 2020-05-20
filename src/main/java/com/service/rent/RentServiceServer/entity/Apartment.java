@@ -53,7 +53,7 @@ public class Apartment {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "apartment")
-    private List<ApartmentsOverview> overviews;
+    private List<ApartmentOverview> overviews;
 
     @Min(1)
     @Max(25)

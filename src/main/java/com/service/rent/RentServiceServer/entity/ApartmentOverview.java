@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 @ToString
-public class ApartmentsOverview {
+public class ApartmentOverview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class ApartmentsOverview {
 
     private LocalDateTime dateTime;
 
-    private String accountComment;
+    private String requesterComment;
     private String ownerComment;
 
     @ManyToOne
@@ -41,6 +41,9 @@ public class ApartmentsOverview {
     private Account account;
 
     @ManyToOne
+    @ToString.Exclude
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @JoinColumn(name = "apartment_id")
     private Apartment apartment;
 

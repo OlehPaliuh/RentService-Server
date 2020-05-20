@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface AccountRepo extends CrudRepository<Account, Long> {
 
+    Account getAccountById(Long accountId);
+
     Optional<Account> getAccountByUsername(String username);
 
     Account getAccountByUsernameAndPassword(String username, String password);

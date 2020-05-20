@@ -60,7 +60,7 @@ public class Account {
     private List<Apartment> ownApartmentList;
 
     @OneToMany(mappedBy = "account")
-    private List<ApartmentsOverview> apartmentOverviews;
+    private List<ApartmentOverview> apartmentOverviews;
 
     @OneToMany(mappedBy = "account")
     private List<Subscription> subscriptions;
