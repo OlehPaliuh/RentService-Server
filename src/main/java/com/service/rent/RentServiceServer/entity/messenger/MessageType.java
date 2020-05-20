@@ -1,4 +1,4 @@
-package com.service.rent.RentServiceServer.entity.chat;
+package com.service.rent.RentServiceServer.entity.messenger;
 
 public enum MessageType {
     PLAIN_TEXT,

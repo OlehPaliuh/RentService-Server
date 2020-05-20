@@ -1,40 +1,43 @@
-package com.service.rent.RentServiceServer.entity.chat;
-
+package com.service.rent.RentServiceServer.entity.messenger;
 
 import com.service.rent.RentServiceServer.entity.Account;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
-@EqualsAndHashCode
 //TODO look
-public class Chat {
+public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String content;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     private LocalDateTime modifiedAt;
+
+    private LocalDateTime dateSeen;
 
     private boolean deleted;
 
-    private String defaultChatName;
+    private LocalDateTime deletedAt;
 
-    private ChatType chatType = ChatType.SIMPLE_CHAT;
+    @Enumerated(EnumType.STRING)
+    private MessageType messageType;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
-    private List<ChatMessage> messages;
+    @ManyToOne
+    private Account sender;
 
-    @OneToMany(mappedBy = "chat")
-    private List<ChatAssignment> chatAssignment;
+    @ManyToOne
+    private Chat chat;
 
 }
