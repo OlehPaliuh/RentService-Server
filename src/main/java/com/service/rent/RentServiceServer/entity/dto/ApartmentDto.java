@@ -1,5 +1,6 @@
 package com.service.rent.RentServiceServer.entity.dto;
 
+import com.service.rent.RentServiceServer.entity.enums.BuildingType;
 import lombok.Data;
 
 import java.util.List;
@@ -15,7 +16,15 @@ public class ApartmentDto {
 
     private Double price;
 
-    private Double area;
+    private Double totalArea;
+
+    private Double livingArea;
+
+    private Integer floor;
+
+    private boolean allowPets;
+
+    private String buildingType;
 
     private String tags;
 

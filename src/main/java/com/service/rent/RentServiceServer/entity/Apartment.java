@@ -2,6 +2,8 @@ package com.service.rent.RentServiceServer.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
+import com.service.rent.RentServiceServer.entity.enums.BuildingType;
+import com.service.rent.RentServiceServer.entity.enums.WallType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -44,7 +46,19 @@ public class Apartment {
 
     private Double price;
 
-    private Double area;
+    private Double livingArea;
+
+    private Integer floor;
+
+    private Double totalArea;
+
+    private boolean hasPhotos;
+
+    private boolean allowPets;
+
+    private BuildingType buildingType;
+
+    private WallType wallType;
 
     private String tags;
 

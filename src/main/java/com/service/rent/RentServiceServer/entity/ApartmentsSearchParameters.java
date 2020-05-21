@@ -26,14 +26,14 @@ public class ApartmentsSearchParameters {
     private Subscription subscription;
     private String regions;
 
-    private Integer minNumberOfRooms;
-    private Integer maxNumberOfRooms;
+    private Integer roomsMin;
+    private Integer roomsMax;
 
-    private Integer floorLow;
-    private Integer floorHigh;
+    private Integer floorMin;
+    private Integer floorMax;
 
-    private Integer priceLow;
-    private Integer priceHigh;
+    private Integer priceMin;
+    private Integer priceMax;
 
     private String tags;
 

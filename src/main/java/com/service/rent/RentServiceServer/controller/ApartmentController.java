@@ -2,9 +2,12 @@ package com.service.rent.RentServiceServer.controller;
 
 import com.service.rent.RentServiceServer.entity.Apartment;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
+import com.service.rent.RentServiceServer.entity.dto.ApartmentFilteringDto;
 import com.service.rent.RentServiceServer.service.ApartmentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,5 +54,11 @@ public class ApartmentController {
     public @ResponseBody
     Apartment createApartment(@RequestBody ApartmentDto apartment) {
         return apartmentService.createApartment(apartment);
+    }
+
+    @PostMapping(path = "/filtering", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    List<Apartment> getFilteredApartments(@RequestBody ApartmentFilteringDto apartmentFilter) {
+        return apartmentService.getFilteredApartments(apartmentFilter);
     }
 }
