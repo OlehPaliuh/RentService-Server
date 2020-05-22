@@ -37,7 +37,7 @@ public class ChatMessage {
     @ManyToOne(fetch = FetchType.EAGER)
     private Account sender;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     private Chat chat;
 
 }

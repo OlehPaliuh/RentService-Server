@@ -1,6 +1,7 @@
 package com.service.rent.RentServiceServer.entity.messenger;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -33,9 +34,11 @@ public class Chat {
 
     private ChatType chatType = ChatType.SIMPLE_CHAT;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
     private List<ChatMessage> messages = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<ChatAssignment> chatAssignments = new ArrayList<>();
 

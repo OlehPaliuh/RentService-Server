@@ -46,6 +46,12 @@ public class ChatController {
         return ChatDtoMapper.toDto(chatService.createChat(username, withUsername));
     }
 
+    @GetMapping("/{username}/chatId")
+    public Long getChatId(@PathVariable String username, @RequestParam String withUsername) {
+
+        return chatService.getChatIdByUsernames(username, withUsername);
+    }
+
 
     /*
      * @GetMapping("/chat/{id}") public ChatDetailsDTO getChatById(@PathVariable Long id , @RequestParam("userId") Long

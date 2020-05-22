@@ -47,12 +47,29 @@ public class ChatService {
         return authorAssignment;
     }
 
+        public Long getChatIdByUsernames(String username, String withUsername) {
+        List<ChatAssignment> chatAssignments = chatAssignmentRepo.findAllByAccount_Username(username);
+        List<ChatAssignment> chatAssignmentsWithUsername = chatAssignmentRepo.findAllByAccount_Username(username);
+
+        Long chatId = null;
+
+        for (ChatAssignment chatAssignment : chatAssignments) {
+            for (ChatAssignment chatAssignmentWithUsername : chatAssignmentsWithUsername) {
+                if (chatAssignment.getChat().getId().equals(chatAssignmentWithUsername.getChat().getId())) {
+                    chatId = chatAssignment.getChat().getId();
+                }
+            }
+        }
+        return chatId;
+    }
+
     private ChatAssignment createChatAssignment(Chat chat, String username, String chatName) {
         ChatAssignment chatAssignment = new ChatAssignment();
+        Account account = accountService.getAccount(username);
         chatAssignment.setChat(chat);
-        chatAssignment.setChatName(chatName);
+        chatAssignment.setChatName(account.getFirstName() + ' ' + account.getLastName());
         chatAssignment.setCreatedAt(LocalDateTime.now());
-        chatAssignment.setAccount(accountService.getAccount(username));
+        chatAssignment.setAccount(account);
 
         return chatAssignmentRepo.save(chatAssignment);
     }
