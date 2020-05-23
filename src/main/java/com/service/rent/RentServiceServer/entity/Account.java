@@ -89,5 +89,5 @@ public class Account {
 
     private LocalDateTime lastLoginTime;
 
-
+    private String city;
 }

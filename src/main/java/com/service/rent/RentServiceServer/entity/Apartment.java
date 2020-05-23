@@ -3,6 +3,7 @@ package com.service.rent.RentServiceServer.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.BuildingType;
+import com.service.rent.RentServiceServer.entity.enums.RentApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.WallType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +27,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -64,6 +66,11 @@ public class Apartment {
 
     @Enumerated(EnumType.STRING)
     private ApartmentStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private RentApartmentStatus rentStatus;
+
+    private LocalDateTime rentStatusChanged;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "apartment")
