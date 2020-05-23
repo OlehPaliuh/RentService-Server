@@ -80,4 +80,10 @@ public class Account {
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<ChatAssignment> chatAssignments;
+
+    private Double maklerProbabilityScore = 0d;
+
+    private Integer owningApartmentsCount;
+
+    private Boolean documentsVerified = false;
 }
