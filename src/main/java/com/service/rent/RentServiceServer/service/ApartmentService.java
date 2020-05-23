@@ -1,5 +1,6 @@
 package com.service.rent.RentServiceServer.service;
 
+import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.entity.Apartment;
 import com.service.rent.RentServiceServer.entity.Location;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
@@ -24,9 +25,6 @@ public class ApartmentService {
 
     @Autowired
     private  LocationService locationService;
-
-    @Autowired
-    private ImageService imageService;
 
     public Iterable<Apartment> getAll() {
         return apartmentRepo.findAll();
@@ -54,6 +52,8 @@ public class ApartmentService {
            Location location = locationService.createLocation(newApartment.getLocation());
            apartment.setLocation(location);
         }
+        Account account = accountService.getById(newApartment.getAccountId());
+        account.setOwningApartmentsCount(account.getOwningApartmentsCount() + 1);
         apartment.setOwner(accountService.getById(newApartment.getAccountId()));
         return saveApartment(apartment);
     }
