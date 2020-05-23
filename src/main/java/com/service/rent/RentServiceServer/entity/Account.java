@@ -86,4 +86,8 @@ public class Account {
     private Integer owningApartmentsCount;
 
     private Boolean documentsVerified = false;
+
+    private LocalDateTime lastLoginTime;
+
+
 }
