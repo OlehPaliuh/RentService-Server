@@ -3,6 +3,7 @@ package com.service.rent.RentServiceServer.controller.admin;
 import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,13 +18,16 @@ public class UserManagementController {
 
     @GetMapping(path = "")
     public List<Account> getAllAccounts(@RequestParam Integer pageNumber,
-                                        @RequestParam Integer count) {
-        return accountService.getAccounts(pageNumber, count);
+                                        @RequestParam Integer count,
+                                        @RequestParam String q) {
+        return StringUtils.isEmpty(q) ?
+                accountService.getAccountsSortedStortedByMaklerProbabilityScoreDesc(pageNumber, count) :
+                accountService.getAccountsSortedStortedByMaklerProbabilityScoreDesc(pageNumber, count, q);
     }
 
     @GetMapping(path = "/count")
-    public Long getAccountCount() {
-        return accountService.countAccounts();
+    public Long getAccountCount(@RequestParam String q) {
+        return StringUtils.isEmpty(q)?accountService.countAccounts():accountService.countAccounts(q);
     }
 
     @GetMapping(path = "/{userName}")
