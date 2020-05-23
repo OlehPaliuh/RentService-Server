@@ -11,6 +11,7 @@ import com.service.rent.RentServiceServer.security.dto.RegisterAccountDto;
 import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,23 @@ public class AccountService {
         return accountRepo.findAll(PageRequest.of(pageNumber, count)).getContent();
     }
 
+    public List<Account> getAccounts(Integer pageNumber, Integer count, String query) {
+        return accountRepo.findAll(PageRequest.of(pageNumber, count)).getContent();
+    }
+
+    public List<Account> getAccountsSortedStortedByMaklerProbabilityScoreDesc(Integer pageNumber, Integer count) {
+        return accountRepo.findAllOrderedByMaklerProbabilityScore(
+                PageRequest.of(pageNumber, count, Sort.by("maklerProbabilityScore").descending()))
+                          .getContent();
+    }
+
+    public List<Account> getAccountsSortedStortedByMaklerProbabilityScoreDesc(Integer pageNumber, Integer count,
+                                                                              String searchQuery) {
+        return accountRepo.fullTextSearch('%' + searchQuery + '%',
+                                          PageRequest.of(pageNumber, count, Sort.by("maklerProbabilityScore").descending()))
+                          .getContent();
+    }
+
     public Account getAccount(String username) {
         return accountRepo.getAccountByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("User with username " + username + " not found in DB."));
@@ -46,6 +64,10 @@ public class AccountService {
 
     public Long countAccounts() {
         return accountRepo.count();
+    }
+
+    public Long countAccounts(String q) {
+        return accountRepo.countByFullTextSearch(q);
     }
 
     public Account createAccount(Account account) throws UserAlreadyExistException {
