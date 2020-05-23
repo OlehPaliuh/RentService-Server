@@ -20,6 +20,10 @@ public class OwnerAccountInfoDto {
 
     private String lastName;
 
+    private String avatarPath;
+
+    private String lockReason;
+
     private String username;
 
     private String email;
@@ -30,5 +34,5 @@ public class OwnerAccountInfoDto {
 
     private List<ApartmentOverview> apartmentOverviews;
 
-    private List<Favourite> favouriteList;
+    private List<FavouriteForAccountDto> favouriteList;
 }

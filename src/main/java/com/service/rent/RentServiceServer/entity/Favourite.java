@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +33,8 @@ public class Favourite {
     @EqualsAndHashCode.Exclude
     private Account account;
 
+    @CreationTimestamp
     private LocalDateTime dateTimeCreated;
+
     private LocalDateTime dateTimeRemoved;
 }

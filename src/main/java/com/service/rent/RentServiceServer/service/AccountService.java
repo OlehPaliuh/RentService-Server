@@ -68,6 +68,21 @@ public class AccountService {
         return accountRepo.save(account);
     }
 
+    public Account updateAccount(Long accountId, Account updateAccount ) {
+        Account account = accountRepo.getAccountById(accountId);
+
+        if(account == null) {
+            throw new UserNotFoundException("No such account to update information about User.");
+        }
+
+        account.setFirstName(updateAccount.getFirstName());
+        account.setLastName(updateAccount.getLastName());
+        account.setEmail(updateAccount.getEmail());
+        account.setPhoneNumber(updateAccount.getPhoneNumber());
+
+        return accountRepo.save(account);
+    }
+
     public Account lockAccount(String username, String lockReason) {
         Account account = this.getAccount(username);
         if (account.isDisabled()) {
@@ -132,5 +147,11 @@ public class AccountService {
 
     public int updateAccountRefreshToken(String refreshTokenKey, Long id) {
         return accountRepo.updateAccountRefreshToken(refreshTokenKey, id);
+    }
+
+    public Account updateAvatar(Long id, String avatarPath) {
+        Account account = accountRepo.getAccountById(id);
+        account.setAvatarPath(avatarPath);
+        return accountRepo.save(account);
     }
 }

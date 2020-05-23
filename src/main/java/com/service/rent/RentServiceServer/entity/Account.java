@@ -54,6 +54,8 @@ public class Account {
 
     private String email;
 
+    private String avatarPath;
+
     @CreationTimestamp
     private LocalDateTime registeredAt;
     @UpdateTimestamp

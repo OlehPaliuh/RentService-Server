@@ -14,9 +14,15 @@ public class AccountDetailsDto {
 
     private String lastName;
 
+    private String avatarPath;
+
     private String email;
 
     private String phoneNumber;
 
+    private Double maklerProbabilityScore;
+
     private List<Apartment> ownApartmentList;
+
+    private List<Apartment> favouriteList;
 }

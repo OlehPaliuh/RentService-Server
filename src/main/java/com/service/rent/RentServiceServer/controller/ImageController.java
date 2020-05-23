@@ -14,6 +14,7 @@ import java.util.List;
 @RequestMapping("api/image")
 public class ImageController {
 
+    @Autowired
     public final ImageService imageService;
 
     @Autowired
@@ -34,7 +35,7 @@ public class ImageController {
          imageService.getAllObjects(apartmentId);
     }
 
-    @PostMapping(path = "/{accountId}//delete")
+    @PostMapping(path = "/{accountId}/delete")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
     Boolean image(@PathVariable Long accountId, @PathParam("filePath") String filePath) throws Exception {

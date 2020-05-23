@@ -53,7 +53,7 @@ public class ApartmentService {
            apartment.setLocation(location);
         }
         Account account = accountService.getById(newApartment.getAccountId());
-        account.setOwningApartmentsCount(account.getOwningApartmentsCount() + 1);
+        account.setOwningApartmentsCount(account.getOwningApartmentsCount() == null ? 0 : account.getOwningApartmentsCount() + 1);
         apartment.setOwner(accountService.getById(newApartment.getAccountId()));
         return saveApartment(apartment);
     }

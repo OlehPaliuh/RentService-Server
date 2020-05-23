@@ -90,6 +90,7 @@ public class Apartment {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "apartment")
+    @JsonIgnore
     private List<Favourite> favouriteList;
 
     @OneToMany(mappedBy = "apartment")

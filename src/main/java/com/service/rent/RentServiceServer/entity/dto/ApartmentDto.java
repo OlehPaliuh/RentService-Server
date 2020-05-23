@@ -1,6 +1,6 @@
 package com.service.rent.RentServiceServer.entity.dto;
 
-import com.service.rent.RentServiceServer.entity.enums.BuildingType;
+import com.service.rent.RentServiceServer.entity.Favourite;
 import lombok.Data;
 
 import java.util.List;
@@ -35,4 +35,6 @@ public class ApartmentDto {
     private Long accountId;
 
     private List<String> imageLinks;
+
+    private List<FavouriteDto> favouriteList;
 }
