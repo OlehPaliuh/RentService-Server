@@ -20,6 +20,8 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
     Optional<Account> getAccountByUsernameAndEmail(String username, String email);
 
+    List<Account> getAllByOwningApartmentsCountGreaterThan(Integer count);
+
     @Modifying
     @Query(value = "UPDATE Account SET refreshTokenKey=:refreshTokenKey WHERE id=:id")
     int updateAccountRefreshToken(String refreshTokenKey, Long id);
