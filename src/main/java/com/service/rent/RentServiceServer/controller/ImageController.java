@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -31,5 +32,12 @@ public class ImageController {
     public @ResponseBody
     void getAllImages(@PathVariable Long apartmentId) {
          imageService.getAllObjects(apartmentId);
+    }
+
+    @PostMapping(path = "/{accountId}//delete")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    Boolean image(@PathVariable Long accountId, @PathParam("filePath") String filePath) throws Exception {
+        return imageService.deleteObjectFromS3(accountId, filePath);
     }
 }

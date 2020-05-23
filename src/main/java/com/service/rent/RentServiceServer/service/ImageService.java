@@ -1,11 +1,13 @@
 package com.service.rent.RentServiceServer.service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -120,6 +122,29 @@ public class ImageService {
         }
 
         return imagePath;
+    }
+
+    public Boolean deleteObjectFromS3(Long accountId, String path) throws Exception {
+        try {
+            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withRegion(clientRegion)
+                    .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
+                    .withPathStyleAccessEnabled(true)
+                    .build();
+
+            String [] pathParts = path.split("/");
+            String fileKey="";
+            if(pathParts.length > 0) {
+                fileKey = pathParts[pathParts.length -1];
+            } else {
+                throw new Exception("Error deleting");
+            }
+
+            s3Client.deleteObject(new DeleteObjectRequest(bucketName, String.format(APARTMENT_S3_PATH, accountId.toString())+fileKey));
+        } catch (AmazonServiceException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public List<S3ObjectSummary> getAllObjects(Long apartmentId) {
