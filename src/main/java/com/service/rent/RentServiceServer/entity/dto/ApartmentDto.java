@@ -1,6 +1,5 @@
 package com.service.rent.RentServiceServer.entity.dto;
 
-import com.service.rent.RentServiceServer.entity.Favourite;
 import lombok.Data;
 
 import java.util.List;

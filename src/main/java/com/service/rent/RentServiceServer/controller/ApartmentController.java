@@ -50,7 +50,9 @@ public class ApartmentController {
 
     @PostMapping(path = "/filtering", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    List<Apartment> getFilteredApartments(@RequestBody ApartmentFilteringDto apartmentFilter) {
-        return apartmentService.getFilteredApartments(apartmentFilter);
+    List<ApartmentDto> getFilteredApartments(@RequestBody ApartmentFilteringDto apartmentFilter) {
+        return apartmentService.getFilteredApartments(apartmentFilter).stream()
+                .map(obj -> modelMapper.map((obj), ApartmentDto.class))
+                .collect(Collectors.toList());
     }
 }

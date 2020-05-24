@@ -47,4 +47,6 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
     @Query(value = "select acc from Account acc order by acc.maklerProbabilityScore DESC NULLS LAST")
     Page<Account> findAllOrderedByMaklerProbabilityScore(Pageable pageable);
+
+    Account getAccountByActivationCode(String code);
 }

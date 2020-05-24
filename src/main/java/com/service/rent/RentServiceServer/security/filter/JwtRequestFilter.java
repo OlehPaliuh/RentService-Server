@@ -2,6 +2,7 @@ package com.service.rent.RentServiceServer.security.filter;
 
 import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
 import com.service.rent.RentServiceServer.security.service.JwtUserDetailsService;
+import com.service.rent.RentServiceServer.service.AccountService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,11 +17,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUserDetailsService jwtUserDetailsService;
+    @Autowired
+    private AccountService accountService;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -44,6 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
             if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+                accountService.updateLastLoginTime(accountService.getByUsername(username).getId(), LocalDateTime.now());
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken

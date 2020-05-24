@@ -2,6 +2,7 @@ package com.service.rent.RentServiceServer.security.service;
 
 import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.exception.IncorrectCredentialsException;
+import com.service.rent.RentServiceServer.exception.UserDisabledException;
 import com.service.rent.RentServiceServer.security.dto.JwtRequestDto;
 import com.service.rent.RentServiceServer.security.dto.JwtResponseDto;
 import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
@@ -12,6 +13,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+
+import javax.security.auth.login.AccountLockedException;
 
 @Service
 public class AuthenticationService {
@@ -27,7 +30,13 @@ public class AuthenticationService {
 
     public JwtResponseDto authenticateUser(JwtRequestDto request) throws Exception {
         authenticate(request.getUsername(), request.getPassword());
-        final Account userDetails = userDetailsService.getByUsername(request.getUsername());
+        Account userDetails = userDetailsService.getByUsername(request.getUsername());
+        if (userDetails.isDisabled()) {
+            throw new UserDisabledException(" Mail has already sent. Confirm account.");
+        }
+        if (userDetails.isLocked()) {
+            throw new AccountLockedException("This account is locked, contact administrator.");
+        }
         return new JwtResponseDto(jwtTokenUtil.generateAccessToken(userDetails), jwtTokenUtil.generateRefreshToken(userDetails), userDetails.getId());
     }
 

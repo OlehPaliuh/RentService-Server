@@ -19,7 +19,7 @@ public class SecurityServiceImpl {
     private AccountService accountService;
 
     @Transactional
-    public JwtResponseDto updateAccessTokens(String refreshToken)throws Exception{
+    public JwtResponseDto updateAccessTokens(String refreshToken) throws Exception {
         String username;
         try {
             username = jwtTokenUtil.getUsernameFromRefreshToken(refreshToken);
@@ -28,12 +28,10 @@ public class SecurityServiceImpl {
         }
         Account account = accountService
                 .getByUsername(username);
-//              .orElseThrow(() -> new BadEmailException(USER_NOT_FOUND_BY_EMAIL + email));
 
-        if(account == null) {
+        if (account == null) {
             throw new Exception("User not found by username");
         }
-//        checkUserStatus(user);
         String newRefreshTokenKey = jwtTokenUtil.generateTokenKey();
         accountService.updateAccountRefreshToken(newRefreshTokenKey, account.getId());
         if (jwtTokenUtil.isTokenValid(refreshToken, account.getRefreshTokenKey())) {
@@ -46,13 +44,4 @@ public class SecurityServiceImpl {
         }
         throw new Exception("REFRESH_TOKEN_NOT_VALID");
     }
-
-//    private void checkUserStatus(User user) {
-//        UserStatus status = user.getUserStatus();
-//        if (status == UserStatus.BLOCKED) {
-//            throw new UserBlockedException(USER_DEACTIVATED);
-//        } else if (status == UserStatus.DEACTIVATED) {
-//            throw new UserDeactivatedException(USER_DEACTIVATED);
-//        }
-//    }
 }

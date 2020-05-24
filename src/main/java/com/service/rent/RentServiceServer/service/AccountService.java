@@ -9,13 +9,17 @@ import com.service.rent.RentServiceServer.repository.AccountRepo;
 import com.service.rent.RentServiceServer.repository.RoleRepo;
 import com.service.rent.RentServiceServer.security.dto.RegisterAccountDto;
 import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
+import com.service.rent.RentServiceServer.service.mail.MailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -31,6 +35,9 @@ public class AccountService {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private MailSender mailSender;
 
     public Iterable<Account> getAccounts() {
         return accountRepo.findAll();
@@ -145,10 +152,22 @@ public class AccountService {
         newAccount.setPhoneNumber(account.getPhoneNumber());
         newAccount.setPassword(bcryptEncoder.encode(account.getPassword()));
         newAccount.setRole(roleRepo.getRoleByName(RoleName.ADMIN));
-        newAccount.setDisabled(false);
+        newAccount.setDisabled(true);
+        newAccount.setActivationCode(UUID.randomUUID().toString());
         newAccount.setRefreshTokenKey(jwtTokenUtil.generateTokenKey());
         newAccount.setLocked(false);
-        saveAccount(newAccount);
+        Account savedAccount = saveAccount(newAccount);
+
+        if(!StringUtils.isEmpty(savedAccount.getEmail())) {
+            String message = String.format(
+                    "Hello, %s %s! \n" +
+                            "Welcome to Rent Service. Please, visit next link: http://localhost:8080/api/activate/%s",
+                    savedAccount.getFirstName(),
+                    savedAccount.getLastName(),
+                    savedAccount.getActivationCode());
+
+            mailSender.send(savedAccount.getEmail(), "Account activation", message);
+        }
     }
 
     public Account saveAccount(Account account) {
@@ -175,5 +194,24 @@ public class AccountService {
         Account account = accountRepo.getAccountById(id);
         account.setAvatarPath(avatarPath);
         return accountRepo.save(account);
+    }
+
+    public Account updateLastLoginTime(Long id, LocalDateTime time) {
+        Account account = accountRepo.getAccountById(id);
+        account.setLastLoginTime(time);
+        return accountRepo.save(account);
+    }
+
+    public String activateAccount(String code) {
+        Account account = accountRepo.getAccountByActivationCode(code);
+        if (account == null) {
+            return "Activation link is not valid anymore";
+        }
+
+        account.setDisabled(false);
+        account.setActivationCode(null);
+
+        accountRepo.save(account);
+        return "User activated";
     }
 }

@@ -54,6 +54,8 @@ public class Account {
 
     private String email;
 
+    private String activationCode;
+
     private String avatarPath;
 
     @CreationTimestamp
@@ -91,5 +93,5 @@ public class Account {
 
     private LocalDateTime lastLoginTime;
 
-    private String city;
+    private Boolean isOnline = false;
 }
