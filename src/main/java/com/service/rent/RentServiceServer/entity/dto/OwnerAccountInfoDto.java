@@ -30,7 +30,7 @@ public class OwnerAccountInfoDto {
 
     private String phoneNumber;
 
-    private List<Apartment> ownApartmentList;
+    private List<ApartmentDto> ownApartmentList;
 
     private List<ApartmentOverview> apartmentOverviews;
 

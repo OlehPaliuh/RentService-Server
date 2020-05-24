@@ -151,7 +151,7 @@ public class AccountService {
         newAccount.setEmail(account.getEmail());
         newAccount.setPhoneNumber(account.getPhoneNumber());
         newAccount.setPassword(bcryptEncoder.encode(account.getPassword()));
-        newAccount.setRole(roleRepo.getRoleByName(RoleName.ADMIN));
+        newAccount.setRole(roleRepo.getRoleByName(RoleName.USER));
         newAccount.setDisabled(true);
         newAccount.setActivationCode(UUID.randomUUID().toString());
         newAccount.setRefreshTokenKey(jwtTokenUtil.generateTokenKey());

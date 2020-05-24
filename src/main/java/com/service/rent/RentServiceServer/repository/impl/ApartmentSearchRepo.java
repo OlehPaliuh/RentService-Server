@@ -1,4 +1,4 @@
-package com.service.rent.RentServiceServer.repository;
+package com.service.rent.RentServiceServer.repository.impl;
 
 import com.service.rent.RentServiceServer.entity.Apartment;
 import com.service.rent.RentServiceServer.entity.Location;

@@ -7,10 +7,14 @@ import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentFilteringDto;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.BuildingType;
+import com.service.rent.RentServiceServer.entity.enums.SortingType;
 import com.service.rent.RentServiceServer.repository.ApartmentRepo;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,10 +28,11 @@ public class ApartmentService {
     private AccountService accountService;
 
     @Autowired
-    private  LocationService locationService;
+    private LocationService locationService;
 
-    public Iterable<Apartment> getAll() {
-        return apartmentRepo.findAll();
+    public List<Apartment> getAll(SortingType sortingType) {
+        List<Apartment> result = apartmentRepo.findAll();
+        return sortApartments(sortingType, result);
     }
 
     public Apartment getApartmentById(Long id) {
@@ -42,15 +47,16 @@ public class ApartmentService {
         apartment.setPrice(newApartment.getPrice());
         apartment.setTotalArea(newApartment.getTotalArea());
         apartment.setTags(newApartment.getTags());
-        apartment.setStatus(ApartmentStatus.CREATED);
+        apartment.setStatus(ApartmentStatus.FREE);
+        apartment.setStatusDateChange(LocalDateTime.now());
         apartment.setImageLinks(newApartment.getImageLinks());
         apartment.setLivingArea(newApartment.getLivingArea());
         apartment.setFloor(newApartment.getFloor());
         apartment.setAllowPets(newApartment.isAllowPets());
         apartment.setBuildingType("New building".equals(newApartment.getBuildingType().trim()) ? BuildingType.NEW_BUILDING : BuildingType.OLD_BUILDING);
-        if(newApartment.getLocation() != null) {
-           Location location = locationService.createLocation(newApartment.getLocation());
-           apartment.setLocation(location);
+        if (newApartment.getLocation() != null) {
+            Location location = locationService.createLocation(newApartment.getLocation());
+            apartment.setLocation(location);
         }
         Account account = accountService.getById(newApartment.getAccountId());
         account.setOwningApartmentsCount(account.getOwningApartmentsCount() == null ? 0 : account.getOwningApartmentsCount() + 1);
@@ -62,9 +68,9 @@ public class ApartmentService {
         return apartmentRepo.save(apartment);
     }
 
-    public List<Apartment> getFilteredApartments(ApartmentFilteringDto apartmentFilter) {
+    public List<Apartment> getFilteredApartments(ApartmentFilteringDto apartmentFilter, SortingType sortingType) {
 
-        return apartmentRepo.findAll().stream()
+        List<Apartment> apartmentsList = apartmentRepo.findAll().stream()
                 .filter(a -> !apartmentFilter.isHasPhotos() || a.getImageLinks().size() > 0)
                 .filter(a -> !apartmentFilter.getAllowPets() || a.isAllowPets())
                 .filter(a -> !apartmentFilter.isNewBuilding() || BuildingType.NEW_BUILDING.equals(a.getBuildingType()))
@@ -80,5 +86,39 @@ public class ApartmentService {
                 .filter(a -> apartmentFilter.getTotalAreaMin() == null || apartmentFilter.getTotalAreaMin() <= a.getTotalArea())
                 .filter(a -> apartmentFilter.getTotalAreaMax() == null || apartmentFilter.getTotalAreaMax() >= a.getTotalArea())
                 .collect(Collectors.toList());
+
+        return sortApartments(sortingType, apartmentsList);
+    }
+
+    private List<Apartment> sortApartments(SortingType sortingType, List<Apartment> apartmentsList) {
+        if (SortingType.PRICE_ASD.equals(sortingType)) {
+            apartmentsList = apartmentsList.stream()
+                    .sorted(Comparator.comparingDouble(Apartment::getPrice))
+                    .collect(Collectors.toList());
+        } else if (SortingType.PRICE_DESC.equals(sortingType)) {
+            apartmentsList = apartmentsList.stream()
+                    .sorted(Comparator.comparingDouble(Apartment::getPrice).reversed())
+                    .collect(Collectors.toList());
+        } else if (SortingType.DATE_ASD.equals(sortingType)) {
+            apartmentsList = apartmentsList.stream()
+                    .sorted(Comparator.comparing(Apartment::getCreateDate, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .collect(Collectors.toList());
+        } else if (SortingType.DATE_DESC.equals(sortingType)) {
+            apartmentsList = apartmentsList.stream()
+                    .sorted(Comparator.comparing(Apartment::getCreateDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                    .collect(Collectors.toList());
+        }
+        return apartmentsList;
+    }
+
+    public Apartment updateStatus(Long apartmentId, ApartmentStatus status) throws NotFoundException {
+        Apartment apartment = apartmentRepo.getApartmentById(apartmentId);
+        if (apartment == null) {
+            throw new NotFoundException("Apartment not found");
+        }
+        apartment.setStatus(status);
+        apartment.setStatusDateChange(LocalDateTime.now());
+        return apartmentRepo.save(apartment);
+
     }
 }

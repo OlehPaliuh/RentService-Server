@@ -3,28 +3,17 @@ package com.service.rent.RentServiceServer.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.BuildingType;
-import com.service.rent.RentServiceServer.entity.enums.RentApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.WallType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
@@ -67,10 +56,7 @@ public class Apartment {
     @Enumerated(EnumType.STRING)
     private ApartmentStatus status;
 
-    @Enumerated(EnumType.STRING)
-    private RentApartmentStatus rentStatus;
-
-    private LocalDateTime rentStatusChanged;
+    private LocalDateTime statusDateChange;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "apartment")
@@ -80,7 +66,11 @@ public class Apartment {
     @Max(25)
     private Integer numberOfRooms;
 
-    // etc.
+    @CreationTimestamp
+    private LocalDateTime createDate;
+
+    @UpdateTimestamp
+    private LocalDateTime editDate;
 
     @ToString.Exclude
     @JsonIgnore

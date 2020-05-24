@@ -1,7 +1,9 @@
 package com.service.rent.RentServiceServer.entity.dto;
 
+import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -36,4 +38,8 @@ public class ApartmentDto {
     private List<String> imageLinks;
 
     private List<FavouriteDto> favouriteList;
+
+    private ApartmentStatus status;
+
+    private LocalDateTime statusDateChange;
 }

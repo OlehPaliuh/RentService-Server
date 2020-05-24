@@ -3,13 +3,17 @@ package com.service.rent.RentServiceServer.controller;
 import com.service.rent.RentServiceServer.entity.Apartment;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentFilteringDto;
+import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
+import com.service.rent.RentServiceServer.entity.enums.SortingType;
 import com.service.rent.RentServiceServer.service.ApartmentService;
+import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,9 +31,9 @@ public class ApartmentController {
     @GetMapping(path = "/all")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public @ResponseBody
-    List<ApartmentDto> getAllApartments() {
+    List<ApartmentDto> getAllApartments(@PathParam("sortBy") SortingType sortBy) {
         List<Apartment> apartmentList = new ArrayList<>();
-        apartmentService.getAll().iterator().forEachRemaining(apartmentList::add);
+        apartmentService.getAll(sortBy).iterator().forEachRemaining(apartmentList::add);
         return apartmentList.stream().map(obj -> modelMapper.map(obj, ApartmentDto.class)).collect(Collectors.toList());
     }
 
@@ -50,9 +54,15 @@ public class ApartmentController {
 
     @PostMapping(path = "/filtering", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    List<ApartmentDto> getFilteredApartments(@RequestBody ApartmentFilteringDto apartmentFilter) {
-        return apartmentService.getFilteredApartments(apartmentFilter).stream()
+    List<ApartmentDto> getFilteredApartments(@PathParam("sortBy")SortingType sortBy, @RequestBody ApartmentFilteringDto apartmentFilter) {
+        return apartmentService.getFilteredApartments(apartmentFilter, sortBy).stream()
                 .map(obj -> modelMapper.map((obj), ApartmentDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @PostMapping(path = "/{apartmentId}/status/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    ApartmentDto apartmentStatusUpdate(@PathVariable Long apartmentId, @PathParam("status") ApartmentStatus status) throws NotFoundException {
+        return modelMapper.map((apartmentService.updateStatus(apartmentId, status)), ApartmentDto.class);
     }
 }

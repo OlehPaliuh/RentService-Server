@@ -1,9 +1,9 @@
 package com.service.rent.RentServiceServer.entity.enums;
 
 public enum ApartmentStatus {
-    CREATED,
-    APPROVED,
-    REJECTED,
+    FREE,
+    REVIEW,
+    RENTED,
     DELETED,
     DUPLICATE,
     BLOCKED

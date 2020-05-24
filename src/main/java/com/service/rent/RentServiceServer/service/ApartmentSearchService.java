@@ -1,8 +1,7 @@
 package com.service.rent.RentServiceServer.service;
 
 import com.service.rent.RentServiceServer.entity.Apartment;
-import com.service.rent.RentServiceServer.repository.ApartmentSearchRepo;
-import org.hibernate.search.jpa.FullTextQuery;
+import com.service.rent.RentServiceServer.repository.impl.ApartmentSearchRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
