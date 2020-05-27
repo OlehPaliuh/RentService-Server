@@ -33,6 +33,7 @@ public class Apartment {
     private String title;
 
     @Field
+    @Column(length = 2048)
     private String description;
 
     private Double price;
@@ -90,7 +91,9 @@ public class Apartment {
     @JsonIgnore
     private List<Favourite> favouriteList;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "apartment")
+    @JsonIgnore
     private List<Comment> comments;
 
     @ElementCollection

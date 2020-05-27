@@ -70,6 +70,11 @@ public class Account {
     @JsonIgnore
     private List<Apartment> ownApartmentList;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "owner")
+    @JsonIgnore
+    private List<Comment> comments;
+
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
     private List<ApartmentOverview> apartmentOverviews;
 

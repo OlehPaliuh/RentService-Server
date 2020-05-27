@@ -1,6 +1,7 @@
 package com.service.rent.RentServiceServer.entity.dto;
 
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
+import com.service.rent.RentServiceServer.entity.enums.BuildingType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class ApartmentDto {
 
     private boolean allowPets;
 
-    private String buildingType;
+    private BuildingType buildingType;
 
     private String tags;
 
@@ -38,6 +39,8 @@ public class ApartmentDto {
     private List<String> imageLinks;
 
     private List<FavouriteDto> favouriteList;
+
+    private List<CommentDto> comments;
 
     private ApartmentStatus status;
 

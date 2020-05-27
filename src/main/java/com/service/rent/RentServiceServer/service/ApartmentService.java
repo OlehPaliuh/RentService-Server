@@ -53,7 +53,7 @@ public class ApartmentService {
         apartment.setLivingArea(newApartment.getLivingArea());
         apartment.setFloor(newApartment.getFloor());
         apartment.setAllowPets(newApartment.isAllowPets());
-        apartment.setBuildingType("New building".equals(newApartment.getBuildingType().trim()) ? BuildingType.NEW_BUILDING : BuildingType.OLD_BUILDING);
+        apartment.setBuildingType(newApartment.getBuildingType());
         if (newApartment.getLocation() != null) {
             Location location = locationService.createLocation(newApartment.getLocation());
             apartment.setLocation(location);

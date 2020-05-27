@@ -17,7 +17,7 @@ public class OnlineStatusChecker {
     private AccountRepo accountRepo;
 
     @Scheduled(cron = "*/20 * * * * *") // кожні 20 секунд
-    public void checkAccountOnlineStatus() {
+    public void checkAccountStatus() {
         List<Account> accountList = accountRepo.findAll();
 
         for (Account account : accountList) {
@@ -27,7 +27,7 @@ public class OnlineStatusChecker {
             }
             LocalDateTime tempDateTime = LocalDateTime.from(from);
 
-            if (tempDateTime.until(LocalDateTime.now(), ChronoUnit.MINUTES) < 5L) {
+            if (tempDateTime.until(LocalDateTime.now(), ChronoUnit.MINUTES) < 1L) {
                 account.setIsOnline(true);
             } else {
                 account.setIsOnline(false);
