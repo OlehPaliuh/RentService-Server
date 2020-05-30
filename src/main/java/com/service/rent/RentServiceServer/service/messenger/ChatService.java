@@ -2,8 +2,6 @@ package com.service.rent.RentServiceServer.service.messenger;
 
 import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.entity.messenger.Chat;
-import com.service.rent.RentServiceServer.entity.messenger.ChatAssignment;
-import com.service.rent.RentServiceServer.repository.messenger.ChatAssignmentRepo;
 import com.service.rent.RentServiceServer.repository.messenger.ChatRepo;
 import com.service.rent.RentServiceServer.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,56 +20,38 @@ public class ChatService {
     private ChatRepo chatRepository;
     @Autowired
     private AccountService accountService;
-    @Autowired
-    private ChatAssignmentRepo chatAssignmentRepo;
 
-    public List<ChatAssignment> getAllByUsername(String username) {
+    public List<Chat> getAllByUsername(String username) {
         Account account = accountService.getAccount(username);
-        return account.getChatAssignments().stream()
-                      .filter(ass -> !ass.getChat().getDeleted())
+        return account.getChats().stream()
+                      .filter(chat -> !chat.getDeleted())
                       .collect(Collectors.toList());
     }
 
-    public ChatAssignment createChat(String usernameAuthor, String usernameGuest) {
+    public Chat getOrCreateChat(String usernameAuthor, String usernameGuest) {
+        Chat existingChat = getChatByUsernames(usernameAuthor, usernameGuest);
+        if (existingChat != null) {
+            return existingChat;
+        }
+
         Chat chat = new Chat();
         chat.setCreatedAt(LocalDateTime.now());
-        chat.setDefaultChatName("Chat");
+        chat.getAccounts().add(accountService.getByUsername(usernameAuthor));
+        chat.getAccounts().add(accountService.getByUsername(usernameGuest));
         chat = chatRepository.save(chat);
 
-        ChatAssignment authorAssignment = createChatAssignment(chat, usernameAuthor, usernameGuest);
-        chat.addChatAssignment(authorAssignment);
-        chat.addChatAssignment(createChatAssignment(chat, usernameGuest, usernameAuthor));
-
-        chatRepository.save(chat);
-
-        return authorAssignment;
+        return chat;
     }
 
-        public Long getChatIdByUsernames(String username, String withUsername) {
-        List<ChatAssignment> chatAssignments = chatAssignmentRepo.findAllByAccount_Username(username);
-        List<ChatAssignment> chatAssignmentsWithUsername = chatAssignmentRepo.findAllByAccount_Username(username);
+    public Chat getChatByUsernames(String username, String withUsername) {
 
-        Long chatId = null;
-
-        for (ChatAssignment chatAssignment : chatAssignments) {
-            for (ChatAssignment chatAssignmentWithUsername : chatAssignmentsWithUsername) {
-                if (chatAssignment.getChat().getId().equals(chatAssignmentWithUsername.getChat().getId())) {
-                    chatId = chatAssignment.getChat().getId();
-                }
+        List<Chat> authorsChats = accountService.getByUsername(username).getChats();
+        for (Chat chat : authorsChats) {
+            if (chat.getAccounts().stream().anyMatch(account -> account.getUsername().equals(withUsername))) {
+                return chat;
             }
         }
-        return chatId;
-    }
-
-    private ChatAssignment createChatAssignment(Chat chat, String username, String chatName) {
-        ChatAssignment chatAssignment = new ChatAssignment();
-        Account account = accountService.getAccount(username);
-        chatAssignment.setChat(chat);
-        chatAssignment.setChatName(account.getFirstName() + ' ' + account.getLastName());
-        chatAssignment.setCreatedAt(LocalDateTime.now());
-        chatAssignment.setAccount(account);
-
-        return chatAssignmentRepo.save(chatAssignment);
+        return null;
     }
 
 }

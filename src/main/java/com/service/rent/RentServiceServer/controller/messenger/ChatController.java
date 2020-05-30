@@ -29,7 +29,7 @@ public class ChatController {
     public List<ChatDto> getChatsByUser(@PathVariable String username) {
 
         List<ChatDto> dtos = chatService.getAllByUsername(username).stream()
-                                        .map(ChatDtoMapper::toDto)
+                                        .map(chat -> ChatDtoMapper.toDto(chat, username))
                                         .collect(Collectors.toList());
 
         for (ChatDto dto : dtos) {
@@ -40,17 +40,13 @@ public class ChatController {
     }
 
 
-    @PostMapping("/{username}/chats/create")
-    public ChatDto createChat(@PathVariable String username, @RequestParam String withUsername) {
+    @GetMapping("/{username}/chats/getOrCreate")
+    public ChatDto getOrcreateChat(@PathVariable String username, @RequestParam String withUsername) {
 
-        return ChatDtoMapper.toDto(chatService.createChat(username, withUsername));
+        return ChatDtoMapper.toDto(chatService.getOrCreateChat(username, withUsername), username);
     }
 
-    @GetMapping("/{username}/chatId")
-    public Long getChatId(@PathVariable String username, @RequestParam String withUsername) {
 
-        return chatService.getChatIdByUsernames(username, withUsername);
-    }
 
 
     /*

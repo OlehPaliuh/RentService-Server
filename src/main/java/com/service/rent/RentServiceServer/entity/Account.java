@@ -1,7 +1,7 @@
 package com.service.rent.RentServiceServer.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.service.rent.RentServiceServer.entity.messenger.ChatAssignment;
+import com.service.rent.RentServiceServer.entity.messenger.Chat;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
@@ -88,9 +88,9 @@ public class Account {
     @JsonIgnore
     private List<Favourite> favouriteList;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "accounts")
     @JsonIgnore
-    private List<ChatAssignment> chatAssignments;
+    private List<Chat> chats;
 
     private Double maklerProbabilityScore = 0d;
 

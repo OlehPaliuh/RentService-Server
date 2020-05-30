@@ -1,25 +1,24 @@
 package com.service.rent.RentServiceServer.controller.messenger.mappers;
 
 import com.service.rent.RentServiceServer.controller.messenger.dtos.ChatDto;
-import com.service.rent.RentServiceServer.entity.messenger.ChatAssignment;
-import org.springframework.util.StringUtils;
+import com.service.rent.RentServiceServer.entity.messenger.Chat;
 
 public class ChatDtoMapper {
-    public static ChatDto toDto(ChatAssignment chatAssignment) {
+    public static ChatDto toDto(Chat chat, String currentUsername) {
         ChatDto chatDto = new ChatDto();
-        chatDto.setId(chatAssignment.getChat().getId());
-        chatDto.setChatName(StringUtils.isEmpty(chatAssignment.getChatName()) ?
-                                    chatAssignment.getChat().getDefaultChatName() : chatAssignment.getChatName());
-
-        chatDto.setCreatedAt(chatAssignment.getChat().getCreatedAt());
-        chatDto.setDeleted(chatAssignment.getChat().getDeleted());
+        chatDto.setId(chat.getId());
         String usernameOfGuyWithWhoYouAreCommunicating =
-                chatAssignment.getChat().getChatAssignments().stream()
-                              .filter(chAss -> !chAss.getAccount().getUsername().equals(
-                                      chatAssignment.getAccount().getUsername()))
-                              .findFirst()
-                              .orElseThrow(() -> new RuntimeException("Something goes wrong during chat mapping"))
-                              .getAccount().getUsername();
+                chat.getAccounts().stream()
+                    .filter(acc -> !acc.getUsername().equals(currentUsername))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Something goes wrong during chat mapping"))
+                    .getUsername();
+
+        chatDto.setChatName(usernameOfGuyWithWhoYouAreCommunicating);
+
+        chatDto.setCreatedAt(chat.getCreatedAt());
+        chatDto.setDeleted(chat.getDeleted());
+
         chatDto.setUsername(usernameOfGuyWithWhoYouAreCommunicating);
 
         return chatDto;
