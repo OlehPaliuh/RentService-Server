@@ -26,15 +26,15 @@ public class CalculateIsMaklerProbability {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Scheduled(cron = "* 0 1 * * *") // вночі раз в день
-//    @Scheduled(cron = "*/10 * * * * *") // що 10 секунд
+//    @Scheduled(cron = "* 0 1 * * *") // вночі раз в день
+    @Scheduled(cron = "*/10 * * * * *") // що 10 секунд
     public void reportCurrentTime() {
         log.info("--------> Starting makler probability calculation <----------");
 
         List<Account> landLords = accountRepo.getAllByOwningApartmentsCountGreaterThan(0);
 
         for (Account landlord : landLords) {
-            landlord.setMaklerProbabilityScore(calculateBeingMaklerProbability(landlord));
+            landlord.setMaklerProbabilityScore(calculateBeingMaklerProbabilityScore(landlord));
         }
 
         accountRepo.saveAll(landLords);
@@ -42,10 +42,12 @@ public class CalculateIsMaklerProbability {
         log.info("--------> Finished makler probability calculation <----------");
     }
 
-    private double calculateBeingMaklerProbability(Account landlord) {
-        return apartmentsCountFunction(landlord) +
-               isMaklerSeverityComplaintsFunction(landlord) +
-               possibleMaklerSeverityComplaintsFunction(landlord);
+    private double calculateBeingMaklerProbabilityScore(Account landlord) {
+        double score = apartmentsCountFunction(landlord) +
+                       isMaklerSeverityComplaintsFunction(landlord) +
+                       possibleMaklerSeverityComplaintsFunction(landlord);
+
+        return score > 1 ? 1 : score;
     }
 
     private double apartmentsCountFunction(Account landlord) {

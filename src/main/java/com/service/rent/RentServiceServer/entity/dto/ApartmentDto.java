@@ -38,6 +38,8 @@ public class ApartmentDto {
 
     private List<String> imageLinks;
 
+    private String ownerUsername;
+
     private List<FavouriteDto> favouriteList;
 
     private List<CommentDto> comments;
