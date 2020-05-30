@@ -66,23 +66,23 @@ public class Account {
     @Length(max = 13)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Apartment> ownApartmentList;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ApartmentOverview> apartmentOverviews;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Subscription> subscriptions;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Favourite> favouriteList;
 

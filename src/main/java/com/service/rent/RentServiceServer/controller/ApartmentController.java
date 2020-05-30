@@ -1,6 +1,7 @@
 package com.service.rent.RentServiceServer.controller;
 
 import com.service.rent.RentServiceServer.entity.Apartment;
+import com.service.rent.RentServiceServer.entity.dto.AccountDetailsDto;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentFilteringDto;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
@@ -65,4 +66,11 @@ public class ApartmentController {
     ApartmentDto apartmentStatusUpdate(@PathVariable Long apartmentId, @PathParam("status") ApartmentStatus status) throws NotFoundException {
         return modelMapper.map((apartmentService.updateStatus(apartmentId, status)), ApartmentDto.class);
     }
+
+    @PostMapping(path = "/{apartmentId}/delete", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    boolean apartmentStatusUpdate(@PathVariable Long apartmentId,  @RequestBody AccountDetailsDto account) throws Exception {
+        return apartmentService.deleteApartment(apartmentId, account);
+    }
+
 }

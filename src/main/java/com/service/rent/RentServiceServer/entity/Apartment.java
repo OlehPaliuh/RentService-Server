@@ -36,12 +36,18 @@ public class Apartment {
     @Column(length = 2048)
     private String description;
 
+    @Min(0)
     private Double price;
 
+    @Min(1)
     private Double livingArea;
 
+    @Min(1)
+    @Max(45)
     private Integer floor;
 
+    @Min(1)
+    @Max(15000)
     private Double totalArea;
 
     private boolean hasPhotos;
@@ -60,7 +66,7 @@ public class Apartment {
     private LocalDateTime statusDateChange;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "apartment")
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
     private List<ApartmentOverview> overviews;
 
     @Min(1)
@@ -81,18 +87,18 @@ public class Apartment {
     private Account owner;
 
     @ToString.Exclude
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id")
     @IndexedEmbedded
     private Location location;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "apartment")
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Favourite> favouriteList;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "apartment")
+    @OneToMany(mappedBy = "apartment", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Comment> comments;
 

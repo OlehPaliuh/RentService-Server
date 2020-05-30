@@ -1,11 +1,14 @@
 package com.service.rent.RentServiceServer.service;
 
 import com.service.rent.RentServiceServer.entity.Account;
+import com.service.rent.RentServiceServer.entity.Apartment;
+import com.service.rent.RentServiceServer.entity.UserComplaint;
 import com.service.rent.RentServiceServer.entity.enums.RoleName;
 import com.service.rent.RentServiceServer.exception.UserAlreadyExistException;
 import com.service.rent.RentServiceServer.exception.UserDisabledException;
 import com.service.rent.RentServiceServer.exception.UserNotFoundException;
 import com.service.rent.RentServiceServer.repository.AccountRepo;
+import com.service.rent.RentServiceServer.repository.ComplaintRepo;
 import com.service.rent.RentServiceServer.repository.RoleRepo;
 import com.service.rent.RentServiceServer.security.dto.RegisterAccountDto;
 import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
@@ -38,6 +41,9 @@ public class AccountService {
 
     @Autowired
     private MailSender mailSender;
+
+    @Autowired
+    private ComplaintRepo complaintRepo;
 
     public Iterable<Account> getAccounts() {
         return accountRepo.findAll();
@@ -184,6 +190,18 @@ public class AccountService {
 
     public void deleteAccount(Long id) {
         accountRepo.delete(getById(id));
+    }
+
+    public boolean deleteOwnAccountWithAllInfo(Long id) {
+        Account account = accountRepo.getAccountById(id);
+
+        for(UserComplaint userComplaint : complaintRepo.getAllByFromAccount_IdOrToAccount_Id(id, id)) {
+            complaintRepo.delete(userComplaint);
+        }
+
+        accountRepo.delete(account);
+
+        return true;
     }
 
     public int updateAccountRefreshToken(String refreshTokenKey, Long id) {

@@ -61,4 +61,10 @@ public class AccountController {
     List<String> image(@PathVariable Long accountId, @RequestParam MultipartFile[] files) {
         return imageService.uploadApartmentImagesToS3(accountId, files);
     }
+
+    @PostMapping(path = "/{accountId}/deleteOwnAccount")
+    public @ResponseBody
+    boolean image(@PathVariable Long accountId) {
+        return accountService.deleteOwnAccountWithAllInfo(accountId);
+    }
 }

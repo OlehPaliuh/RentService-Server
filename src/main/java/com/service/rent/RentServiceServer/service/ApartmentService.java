@@ -3,6 +3,7 @@ package com.service.rent.RentServiceServer.service;
 import com.service.rent.RentServiceServer.entity.Account;
 import com.service.rent.RentServiceServer.entity.Apartment;
 import com.service.rent.RentServiceServer.entity.Location;
+import com.service.rent.RentServiceServer.entity.dto.AccountDetailsDto;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentFilteringDto;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
@@ -26,6 +27,9 @@ public class ApartmentService {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     private LocationService locationService;
@@ -120,5 +124,26 @@ public class ApartmentService {
         apartment.setStatusDateChange(LocalDateTime.now());
         return apartmentRepo.save(apartment);
 
+    }
+
+    public boolean deleteApartment(Long apartmentId, AccountDetailsDto accountDetailsDto) throws Exception {
+
+        Apartment apartment = apartmentRepo.getApartmentById(apartmentId);
+
+        if(apartment == null) {
+            throw new NotFoundException("Apartment not found");
+        }
+
+        if(apartment.getOwner() != null && apartment.getOwner().getId() != null && apartment.getOwner().getId().equals(accountDetailsDto.getId())) {
+
+            for(String link : apartment.getImageLinks()) {
+                imageService.deleteObjectFromS3(accountDetailsDto.getId(), link);
+            }
+
+            apartmentRepo.delete(apartment);
+        } else {
+            throw new NotFoundException("Account is not owner");
+        }
+        return true;
     }
 }
