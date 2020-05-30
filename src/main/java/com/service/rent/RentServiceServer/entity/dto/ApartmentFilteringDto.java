@@ -27,6 +27,9 @@ public class ApartmentFilteringDto {
 
     private boolean hasPhotos;
     private boolean allowPets;
+    private String landlordUsername;
+
+    private String fulltextSearchString;
 
     public boolean getAllowPets() {
         return allowPets;

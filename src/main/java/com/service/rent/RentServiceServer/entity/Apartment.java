@@ -80,9 +80,8 @@ public class Apartment {
     private LocalDateTime editDate;
 
     @ToString.Exclude
-    @JsonIgnore
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private Account owner;
 
@@ -104,4 +103,6 @@ public class Apartment {
 
     @ElementCollection
     private List<String> imageLinks;
+
+    private Boolean isLocked = false;
 }

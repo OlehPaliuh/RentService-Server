@@ -100,7 +100,7 @@ public class AccountService {
             account.setId(accountRepo.getAccountByUsername(account.getUsername()).get().getId());
         }
 
-        return accountRepo.save(account);
+        return accountRepo.saveAndFlush(account);
     }
 
     public Account updateAccount(Long accountId, Account updateAccount ) {
@@ -124,6 +124,7 @@ public class AccountService {
             throw new UserDisabledException("You cannot modify user with username +" + username + " because user is disabled");
         }
         account.setLocked(true);
+        account.setLockTimestamp(java.time.LocalDateTime.now());
         account.setLockReason(lockReason);
         return accountRepo.save(account);
     }
@@ -134,6 +135,7 @@ public class AccountService {
             throw new UserDisabledException("You cannot modify user with username +" + username + " because user is disabled");
         }
         account.setLocked(false);
+        account.setUnlockTimestamp(java.time.LocalDateTime.now());
         account.setLockReason("");
         return accountRepo.save(account);
     }
@@ -141,8 +143,9 @@ public class AccountService {
     public Account deleteAccount(String username, String deletionReason) {
         Account account = this.getAccount(username);
         account.setDisabled(true);
-        account.setLockReason(deletionReason);
+        account.setLockReason("Deleted " +   deletionReason);
         account.setLocked(true);
+        account.setLockTimestamp(java.time.LocalDateTime.now());
         return accountRepo.save(account);
     }
 

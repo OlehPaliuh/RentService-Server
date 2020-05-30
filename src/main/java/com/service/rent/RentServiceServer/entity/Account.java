@@ -28,6 +28,8 @@ public class Account {
     @NotNull
     private boolean isLocked = false;
     private String lockReason;
+    private LocalDateTime lockTimestamp;
+    private LocalDateTime unlockTimestamp;
 
     /**
      * Account is created but not activated OR account is deleted

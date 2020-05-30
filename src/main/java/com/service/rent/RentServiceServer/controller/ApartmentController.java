@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -53,17 +54,28 @@ public class ApartmentController {
         return apartmentService.createApartment(apartment);
     }
 
+    @PostMapping(path = "/searchAndFiltering", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    List<ApartmentDto> getFilteredApartments(@RequestBody ApartmentFilteringDto apartmentFilter, @RequestParam String q) {
+        List<Apartment> apartments = StringUtils.isEmpty(q) ?
+                apartmentService.getFilteredApartments(apartmentFilter) :
+                apartmentService.getFilteredApartments(apartmentFilter, q);
+        return apartments.stream().map(app -> modelMapper.map(app, ApartmentDto.class)).collect(Collectors.toList());
+    }
+
     @PostMapping(path = "/filtering", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    List<ApartmentDto> getFilteredApartments(@PathParam("sortBy")SortingType sortBy, @RequestBody ApartmentFilteringDto apartmentFilter) {
+    List<ApartmentDto> getFilteredApartments(@PathParam("sortBy") SortingType sortBy,
+                                             @RequestBody ApartmentFilteringDto apartmentFilter) {
         return apartmentService.getFilteredApartments(apartmentFilter, sortBy).stream()
-                .map(obj -> modelMapper.map((obj), ApartmentDto.class))
-                .collect(Collectors.toList());
+                               .map(obj -> modelMapper.map((obj), ApartmentDto.class))
+                               .collect(Collectors.toList());
     }
 
     @PostMapping(path = "/{apartmentId}/status/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    ApartmentDto apartmentStatusUpdate(@PathVariable Long apartmentId, @PathParam("status") ApartmentStatus status) throws NotFoundException {
+    ApartmentDto apartmentStatusUpdate(@PathVariable Long apartmentId, @PathParam("status") ApartmentStatus status) throws
+                                                                                                                    NotFoundException {
         return modelMapper.map((apartmentService.updateStatus(apartmentId, status)), ApartmentDto.class);
     }
 

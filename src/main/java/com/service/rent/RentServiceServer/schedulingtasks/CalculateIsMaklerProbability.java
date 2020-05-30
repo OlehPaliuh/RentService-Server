@@ -34,7 +34,7 @@ public class CalculateIsMaklerProbability {
         List<Account> landLords = accountRepo.getAllByOwningApartmentsCountGreaterThan(0);
 
         for (Account landlord : landLords) {
-            landlord.setMaklerProbabilityScore(calculateBeingMaklerProbability(landlord));
+            landlord.setMaklerProbabilityScore(calculateBeingMaklerProbabilityScore(landlord));
         }
 
         accountRepo.saveAll(landLords);
@@ -42,10 +42,12 @@ public class CalculateIsMaklerProbability {
         log.info("--------> Finished makler probability calculation <----------");
     }
 
-    private double calculateBeingMaklerProbability(Account landlord) {
-        return apartmentsCountFunction(landlord) +
-               isMaklerSeverityComplaintsFunction(landlord) +
-               possibleMaklerSeverityComplaintsFunction(landlord);
+    private double calculateBeingMaklerProbabilityScore(Account landlord) {
+        double score = apartmentsCountFunction(landlord) +
+                       isMaklerSeverityComplaintsFunction(landlord) +
+                       possibleMaklerSeverityComplaintsFunction(landlord);
+
+        return score > 1 ? 1 : score;
     }
 
     private double apartmentsCountFunction(Account landlord) {

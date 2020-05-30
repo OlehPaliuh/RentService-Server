@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,12 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
     Optional<Account> getAccountByUsernameAndEmail(String username, String email);
 
     List<Account> getAllByOwningApartmentsCountGreaterThan(Integer count);
+
+    Long countAccountsByIsOnlineTrue();
+
+    Long countAccountsByIsLockedTrueAndMaklerProbabilityScoreAfter(Double minimumMps);
+
+    Long countAccountsByRegisteredAtAfter(LocalDateTime date);
 
     @Modifying
     @Query(value = "UPDATE Account SET refreshTokenKey=:refreshTokenKey WHERE id=:id")

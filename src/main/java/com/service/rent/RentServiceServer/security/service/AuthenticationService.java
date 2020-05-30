@@ -37,7 +37,8 @@ public class AuthenticationService {
         if (userDetails.isLocked()) {
             throw new AccountLockedException("This account is locked, contact administrator.");
         }
-        return new JwtResponseDto(jwtTokenUtil.generateAccessToken(userDetails), jwtTokenUtil.generateRefreshToken(userDetails), userDetails.getId());
+        return new JwtResponseDto(jwtTokenUtil.generateAccessToken(userDetails), jwtTokenUtil.generateRefreshToken(userDetails),
+                                  userDetails.getId(), userDetails.getUsername());
     }
 
     private void authenticate(String username, String password) throws Exception {

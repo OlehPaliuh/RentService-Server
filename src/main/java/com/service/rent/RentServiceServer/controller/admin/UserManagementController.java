@@ -35,11 +35,6 @@ public class UserManagementController {
         return accountService.getAccount(userName);
     }
 
-    @PostMapping(path = "/create")
-    public Account createAccount(@RequestBody Account account) {
-        return accountService.createAccount(account);
-    }
-
     @PostMapping(path = "/update")
     public Account updateAccount(@RequestBody Account account) {
         return accountService.updateAccount(account);

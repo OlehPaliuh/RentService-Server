@@ -6,5 +6,6 @@ public enum ApartmentStatus {
     RENTED,
     DELETED,
     DUPLICATE,
+    CREATED,
     BLOCKED
 }
