@@ -5,14 +5,11 @@ import com.service.rent.RentServiceServer.entity.dto.ApartmentDto;
 import com.service.rent.RentServiceServer.entity.dto.ApartmentFilteringDto;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.SortingType;
-import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
-import com.service.rent.RentServiceServer.entity.enums.SortingType;
 import com.service.rent.RentServiceServer.service.ApartmentService;
 import javassist.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -56,17 +53,19 @@ public class ApartmentController {
         return apartmentService.createApartment(apartment);
     }
 
-    @PostMapping(path = "/filtering", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/searchAndFiltering", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    List<Apartment> getFilteredApartments(@RequestBody ApartmentFilteringDto apartmentFilter, @RequestParam String q) {
-        return StringUtils.isEmpty(q)?
-                apartmentService.getFilteredApartments(apartmentFilter):
+    List<ApartmentDto> getFilteredApartments(@RequestBody ApartmentFilteringDto apartmentFilter, @RequestParam String q) {
+        List<Apartment> apartments = StringUtils.isEmpty(q) ?
+                apartmentService.getFilteredApartments(apartmentFilter) :
                 apartmentService.getFilteredApartments(apartmentFilter, q);
+        return apartments.stream().map(app -> modelMapper.map(app, ApartmentDto.class)).collect(Collectors.toList());
     }
 
     @PostMapping(path = "/filtering", consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    List<ApartmentDto> getFilteredApartments(@PathParam("sortBy") SortingType sortBy, @RequestBody ApartmentFilteringDto apartmentFilter) {
+    List<ApartmentDto> getFilteredApartments(@PathParam("sortBy") SortingType sortBy,
+                                             @RequestBody ApartmentFilteringDto apartmentFilter) {
         return apartmentService.getFilteredApartments(apartmentFilter, sortBy).stream()
                                .map(obj -> modelMapper.map((obj), ApartmentDto.class))
                                .collect(Collectors.toList());

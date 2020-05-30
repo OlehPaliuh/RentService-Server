@@ -94,7 +94,7 @@ public class AccountService {
             account.setId(accountRepo.getAccountByUsername(account.getUsername()).get().getId());
         }
 
-        return accountRepo.save(account);
+        return accountRepo.saveAndFlush(account);
     }
 
     public Account updateAccount(Long accountId, Account updateAccount ) {

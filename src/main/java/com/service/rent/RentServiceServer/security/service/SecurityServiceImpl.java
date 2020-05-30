@@ -39,7 +39,8 @@ public class SecurityServiceImpl {
             return new JwtResponseDto(
                     jwtTokenUtil.generateAccessToken(account),
                     jwtTokenUtil.generateRefreshToken(account),
-                    account.getId()
+                    account.getId(),
+                    account.getUsername()
             );
         }
         throw new Exception("REFRESH_TOKEN_NOT_VALID");

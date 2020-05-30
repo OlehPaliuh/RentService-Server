@@ -8,11 +8,11 @@ import com.service.rent.RentServiceServer.entity.dto.ApartmentFilteringDto;
 import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.BuildingType;
 import com.service.rent.RentServiceServer.entity.enums.SortingType;
+import com.service.rent.RentServiceServer.exception.AppatmentNotFound;
 import com.service.rent.RentServiceServer.repository.ApartmentRepo;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -41,7 +41,7 @@ public class ApartmentService {
     }
 
     public Apartment getApartmentById(Long id) {
-        return apartmentRepo.findById(id).get();
+        return apartmentRepo.findById(id).orElseThrow(() -> new AppatmentNotFound("Appartment with id: " + id + " not found"));
     }
 
     public Apartment createApartment(ApartmentDto newApartment) {
@@ -74,13 +74,46 @@ public class ApartmentService {
     }
 
     public List<Apartment> getFilteredApartments(ApartmentFilteringDto apartmentFilter, String q) {
-        return getFilteredApartments(apartmentFilter, apartmentSearchService.searchApartments(q));
+        return filterApartments(apartmentFilter, apartmentSearchService.searchApartments(q));
     }
 
     public List<Apartment> getFilteredApartments(ApartmentFilteringDto apartmentFilter) {
-        return getFilteredApartments(apartmentFilter, apartmentRepo.findAll());
+        return filterApartments(apartmentFilter, apartmentRepo.findAll());
     }
 
+    private List<Apartment> filterApartments(ApartmentFilteringDto apartmentFilter, List<Apartment> apartments) {
+        return apartments.stream()
+                         .filter(a -> !apartmentFilter.isHasPhotos() || a.getImageLinks().size() > 0)
+                         .filter(a -> !apartmentFilter.getAllowPets() || a.isAllowPets())
+                         .filter(a -> !apartmentFilter.isNewBuilding() ||
+                                      BuildingType.NEW_BUILDING.equals(a.getBuildingType()))
+                         .filter(a -> !apartmentFilter.isOldBuilding() ||
+                                      BuildingType.OLD_BUILDING.equals(a.getBuildingType()))
+                         .filter(a -> apartmentFilter.getPriceMin() == null ||
+                                      apartmentFilter.getPriceMin() <= a.getPrice())
+                         .filter(a -> apartmentFilter.getPriceMax() == null ||
+                                      apartmentFilter.getPriceMax() >= a.getPrice())
+                         .filter(a -> apartmentFilter.getFloorMin() == null ||
+                                      apartmentFilter.getFloorMin() <= a.getFloor())
+                         .filter(a -> apartmentFilter.getFloorMax() == null ||
+                                      apartmentFilter.getFloorMax() >= a.getFloor())
+                         .filter(a -> apartmentFilter.getLivingAreaMin() == null ||
+                                      apartmentFilter.getLivingAreaMin() <= a.getLivingArea())
+                         .filter(a -> apartmentFilter.getLivingAreaMax() == null ||
+                                      apartmentFilter.getLivingAreaMax() >= a.getLivingArea())
+                         .filter(a -> apartmentFilter.getRoomsMin() == null ||
+                                      apartmentFilter.getRoomsMin() <= a.getNumberOfRooms())
+                         .filter(a -> apartmentFilter.getRoomsMax() == null ||
+                                      apartmentFilter.getRoomsMax() >= a.getNumberOfRooms())
+                         .filter(a -> apartmentFilter.getTotalAreaMin() == null ||
+                                      apartmentFilter.getTotalAreaMin() <= a.getTotalArea())
+                         .filter(a -> apartmentFilter.getTotalAreaMax() == null ||
+                                      apartmentFilter.getTotalAreaMax() >= a.getTotalArea())
+                         .filter(a -> StringUtils.isEmpty(apartmentFilter.getLandlordUsername()) ||
+                                      apartmentFilter.getLandlordUsername()
+                                                     .equals(a.getOwner().getUsername()))
+                         .collect(Collectors.toList());
+    }
 
     public List<Apartment> getFilteredApartments(ApartmentFilteringDto apartmentFilter, SortingType sortingType) {
 
@@ -153,5 +186,9 @@ public class ApartmentService {
 
     }
 
-
+    public Apartment toggleLock(Long id) {
+        Apartment apartment = getApartmentById(id);
+        apartment.setIsLocked(!apartment.getIsLocked());
+        return apartmentRepo.saveAndFlush(apartment);
+    }
 }

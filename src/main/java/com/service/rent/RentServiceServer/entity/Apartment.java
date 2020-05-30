@@ -97,4 +97,6 @@ public class Apartment {
 
     @ElementCollection
     private List<String> imageLinks;
+
+    private Boolean isLocked = false;
 }
