@@ -15,5 +15,5 @@ public class CommentDto {
 
     private Long apartmentId;
 
-    private AccountDetailsDto owner;
+    private CommentAccountDto owner;
 }

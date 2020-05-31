@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,8 @@ public class OverviewService {
 
     public ApartmentOverview createOverviewRequest(ApartmentOverviewRequestDto apartmentOverviewRequestDto) {
         ApartmentOverview apartmentOverview = new ApartmentOverview();
-        apartmentOverview.setDateTime(apartmentOverviewRequestDto.getDateTime());
+        LocalDateTime localDateTime = apartmentOverviewRequestDto.getDateTime().withZoneSameInstant( ZoneId.of( "Europe/Kiev") ).toLocalDateTime();
+        apartmentOverview.setDateTime(localDateTime);
         apartmentOverview.setRequesterComment(apartmentOverviewRequestDto.getComment());
         apartmentOverview.setStatus(OverviewStatus.REQUESTED);
         apartmentOverview.setAccount(accountRepo.getAccountById(apartmentOverviewRequestDto.getAccountId()));
@@ -38,6 +40,15 @@ public class OverviewService {
     public List<ApartmentOverview> getOverviewByApartmentId(Long apartmentId) {
         return overviewRepo.getAllApartmentOverviewByApartmentId(apartmentId).stream()
                 .filter(overview -> overview.getStatus().equals(OverviewStatus.REQUESTED) || overview.getStatus().equals(OverviewStatus.AGREED))
+                .filter(overview -> overview.getDateTime().compareTo(LocalDateTime.now()) > 0)
+                .collect(Collectors.toList());
+    }
+
+    public List<ApartmentOverview> getOverviewByAccountId(Long accountId) {
+        return overviewRepo.getAllApartmentOverviewByAccountId(accountId).stream()
+                .filter(overview -> overview.getStatus().equals(OverviewStatus.REQUESTED)
+                        || overview.getStatus().equals(OverviewStatus.AGREED)
+                        || overview.getStatus().equals(OverviewStatus.REJECTED))
                 .filter(overview -> overview.getDateTime().compareTo(LocalDateTime.now()) > 0)
                 .collect(Collectors.toList());
     }

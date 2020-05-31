@@ -1,7 +1,6 @@
 package com.service.rent.RentServiceServer.service;
 
 import com.service.rent.RentServiceServer.entity.Account;
-import com.service.rent.RentServiceServer.entity.Apartment;
 import com.service.rent.RentServiceServer.entity.UserComplaint;
 import com.service.rent.RentServiceServer.entity.enums.RoleName;
 import com.service.rent.RentServiceServer.exception.UserAlreadyExistException;
@@ -60,14 +59,14 @@ public class AccountService {
     public List<Account> getAccountsSortedStortedByMaklerProbabilityScoreDesc(Integer pageNumber, Integer count) {
         return accountRepo.findAllOrderedByMaklerProbabilityScore(
                 PageRequest.of(pageNumber, count, Sort.by("maklerProbabilityScore").descending()))
-                          .getContent();
+                .getContent();
     }
 
     public List<Account> getAccountsSortedStortedByMaklerProbabilityScoreDesc(Integer pageNumber, Integer count,
                                                                               String searchQuery) {
         return accountRepo.fullTextSearch('%' + searchQuery + '%',
-                                          PageRequest.of(pageNumber, count, Sort.by("maklerProbabilityScore").descending()))
-                          .getContent();
+                PageRequest.of(pageNumber, count, Sort.by("maklerProbabilityScore").descending()))
+                .getContent();
     }
 
     public Account getAccount(String username) {
@@ -92,7 +91,7 @@ public class AccountService {
 
     public Account updateAccount(Account account) {
         if (accountRepo.getAccountByUsername(account.getUsername()).isEmpty() &&
-            accountRepo.findById(account.getId()).isEmpty()) {
+                accountRepo.findById(account.getId()).isEmpty()) {
             throw new UserNotFoundException("No such username and id to update User.");
         }
 
@@ -103,10 +102,10 @@ public class AccountService {
         return accountRepo.saveAndFlush(account);
     }
 
-    public Account updateAccount(Long accountId, Account updateAccount ) {
+    public Account updateAccount(Long accountId, Account updateAccount) {
         Account account = accountRepo.getAccountById(accountId);
 
-        if(account == null) {
+        if (account == null) {
             throw new UserNotFoundException("No such account to update information about User.");
         }
 
@@ -129,6 +128,17 @@ public class AccountService {
         return accountRepo.save(account);
     }
 
+    public Account lockAccount(Long accountId, String lockReason) {
+        Account account = accountRepo.getAccountById(accountId);
+        if (account.isDisabled()) {
+            throw new UserDisabledException("You cannot modify user because user is disabled");
+        }
+        account.setLocked(true);
+        account.setLockTimestamp(java.time.LocalDateTime.now());
+        account.setLockReason(lockReason);
+        return accountRepo.save(account);
+    }
+
     public Account unlockAccount(String username) {
         Account account = this.getAccount(username);
         if (account.isDisabled()) {
@@ -143,7 +153,7 @@ public class AccountService {
     public Account deleteAccount(String username, String deletionReason) {
         Account account = this.getAccount(username);
         account.setDisabled(true);
-        account.setLockReason("Deleted " +   deletionReason);
+        account.setLockReason("Deleted " + deletionReason);
         account.setLocked(true);
         account.setLockTimestamp(java.time.LocalDateTime.now());
         return accountRepo.save(account);
@@ -167,7 +177,7 @@ public class AccountService {
         newAccount.setLocked(false);
         Account savedAccount = saveAccount(newAccount);
 
-        if(!StringUtils.isEmpty(savedAccount.getEmail())) {
+        if (!StringUtils.isEmpty(savedAccount.getEmail())) {
             String message = String.format(
                     "Hello, %s %s! \n" +
                             "Welcome to Rent Service. Please, visit next link: http://localhost:8080/api/activate/%s",
@@ -198,7 +208,7 @@ public class AccountService {
     public boolean deleteOwnAccountWithAllInfo(Long id) {
         Account account = accountRepo.getAccountById(id);
 
-        for(UserComplaint userComplaint : complaintRepo.getAllByFromAccount_IdOrToAccount_Id(id, id)) {
+        for (UserComplaint userComplaint : complaintRepo.getAllByFromAccount_IdOrToAccount_Id(id, id)) {
             complaintRepo.delete(userComplaint);
         }
 

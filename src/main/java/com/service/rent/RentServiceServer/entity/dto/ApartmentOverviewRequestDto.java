@@ -2,7 +2,7 @@ package com.service.rent.RentServiceServer.entity.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 public class ApartmentOverviewRequestDto {
@@ -12,5 +12,5 @@ public class ApartmentOverviewRequestDto {
 
     private String comment;
 
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
 }

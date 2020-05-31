@@ -10,6 +10,7 @@ import com.service.rent.RentServiceServer.entity.enums.ApartmentStatus;
 import com.service.rent.RentServiceServer.entity.enums.BuildingType;
 import com.service.rent.RentServiceServer.entity.enums.SortingType;
 import com.service.rent.RentServiceServer.exception.AppatmentNotFound;
+import com.service.rent.RentServiceServer.repository.AccountRepo;
 import com.service.rent.RentServiceServer.repository.ApartmentRepo;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,14 @@ public class ApartmentService {
     @Autowired
     private LocationService locationService;
 
+    @Autowired
+    private AccountRepo accountRepo;
+
     public List<Apartment> getAll(SortingType sortingType) {
         List<Apartment> result = apartmentRepo.findAll();
+        result = result.stream()
+                .filter(apartment -> !apartment.getOwner().isLocked())
+                .collect(Collectors.toList());
         return sortApartments(sortingType, result);
     }
 
@@ -68,7 +75,7 @@ public class ApartmentService {
             apartment.setLocation(location);
         }
         Account account = accountService.getById(newApartment.getAccountId());
-        account.setOwningApartmentsCount(account.getOwningApartmentsCount() == null ? 0 : account.getOwningApartmentsCount() + 1);
+        account.setOwningApartmentsCount(account.getOwningApartmentsCount() == null ? 1 : account.getOwningApartmentsCount() + 1);
         apartment.setOwner(accountService.getById(newApartment.getAccountId()));
         return saveApartment(apartment);
     }
@@ -122,6 +129,7 @@ public class ApartmentService {
     public List<Apartment> getFilteredApartments(ApartmentFilteringDto apartmentFilter, SortingType sortingType) {
 
         List<Apartment> apartmentsList = apartmentRepo.findAll().stream()
+                                                        .filter(apartment -> !apartment.getOwner().isLocked())
                                                       .filter(a -> !apartmentFilter.isHasPhotos() || a.getImageLinks().size() > 0)
                                                       .filter(a -> !apartmentFilter.getAllowPets() || a.isAllowPets())
                                                       .filter(a -> !apartmentFilter.isNewBuilding() ||
@@ -148,9 +156,9 @@ public class ApartmentService {
                                                                    apartmentFilter.getTotalAreaMin() <= a.getTotalArea())
                                                       .filter(a -> apartmentFilter.getTotalAreaMax() == null ||
                                                                    apartmentFilter.getTotalAreaMax() >= a.getTotalArea())
-                                                      .filter(a -> StringUtils.isEmpty(apartmentFilter.getLandlordUsername()) ||
-                                                                   apartmentFilter.getLandlordUsername()
-                                                                                  .equals(a.getOwner().getUsername()))
+//                                                      .filter(a -> StringUtils.isEmpty(apartmentFilter.getLandlordUsername()) ||
+//                                                                   apartmentFilter.getLandlordUsername()
+//                                                                                  .equals(a.getOwner().getUsername()))
                                                       .collect(Collectors.toList());
 
         return sortApartments(sortingType, apartmentsList);
@@ -199,6 +207,11 @@ public class ApartmentService {
         }
 
         if(apartment.getOwner() != null && apartment.getOwner().getId() != null && apartment.getOwner().getId().equals(accountDetailsDto.getId())) {
+
+            Account account = accountRepo.getAccountById(accountDetailsDto.getId());
+
+            account.setOwningApartmentsCount(account.getOwningApartmentsCount() > 0 ? account.getOwningApartmentsCount() - 1 : 0);
+            accountRepo.save(account);
 
             for(String link : apartment.getImageLinks()) {
                 imageService.deleteObjectFromS3(accountDetailsDto.getId(), link);

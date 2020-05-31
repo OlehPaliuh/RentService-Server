@@ -11,5 +11,7 @@ public interface OverviewRepo extends CrudRepository<ApartmentOverview, Long> {
 
     List<ApartmentOverview> getAllApartmentOverviewByApartmentId(Long apartmentId);
 
+    List<ApartmentOverview> getAllApartmentOverviewByAccountId(Long accountId);
+
     ApartmentOverview getApartmentOverviewById(Long overviewId);
 }

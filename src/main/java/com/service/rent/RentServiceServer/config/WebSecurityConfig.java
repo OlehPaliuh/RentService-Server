@@ -29,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService jwtUserDetailsService;
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
@@ -53,18 +54,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-            .authorizeRequests()
-            .antMatchers("/api/register")
-            .permitAll()
-            .antMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")
-            .antMatchers("/api/admin/**").permitAll()
-            .antMatchers("/api/messenger").permitAll()
+                .authorizeRequests()
+                .antMatchers("/api/register")
+                .permitAll()
+                .antMatchers("/api/user/**").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers("/api/admin/**").permitAll()
+                .antMatchers("/api/messenger").permitAll()
 //            .antMatchers("/api/admin/**").hasAnyAuthority("MODERATOR", "ADMIN")
-            .and()
-            .exceptionHandling()
-            .authenticationEntryPoint((req, resp, exc) -> resp.sendError(SC_UNAUTHORIZED, "Unauthorized"))
-            .and().sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .anyRequest().permitAll()
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((req, resp, exc) -> resp.sendError(SC_UNAUTHORIZED, "Unauthorized"))
+                .and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
