@@ -24,7 +24,7 @@ public class MessageController {
     public List<ChatMessage> getCurrentMessages(@PathVariable Long chatId, @RequestParam("pageNumber") int pageNumber) {
         List<ChatMessage> list = messageService.getNext30Messages(chatId, pageNumber);
 
-        return messageService.getNext30Messages(chatId, pageNumber);
+        return messageService.getAllMessages(chatId);
     }
 
 }

@@ -1,7 +1,10 @@
 package com.service.rent.RentServiceServer.security.dto;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 
+@Getter
 public class JwtResponseDto implements Serializable {
     private static final long serialVersionUID = -8091879091924046844L;
     private final Long id;
@@ -16,15 +19,4 @@ public class JwtResponseDto implements Serializable {
         this.username = username;
     }
 
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getAccessToken() {
-        return this.accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
 }

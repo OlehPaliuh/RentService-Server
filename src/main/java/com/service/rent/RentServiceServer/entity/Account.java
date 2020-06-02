@@ -77,6 +77,7 @@ public class Account {
     @JsonIgnore
     private List<Comment> comments;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ApartmentOverview> apartmentOverviews;
 

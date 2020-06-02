@@ -50,4 +50,11 @@ public class MessageService {
 
         return messageRepo.findAllByChatOrderByCreatedAtDesc(chat, PageRequest.of(pageNumber, 30));
     }
+
+    public List<ChatMessage> getAllMessages(long chatId) { // max number of messages =)
+        Chat chat = chatRepo.findById(chatId)
+                            .orElseThrow(() -> new ChatNotFoundException("Chat not found with id " + chatId));
+
+        return messageRepo.findAllByChatOrderByCreatedAtDesc(chat);
+    }
 }
