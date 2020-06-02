@@ -12,6 +12,7 @@ import com.service.rent.RentServiceServer.repository.RoleRepo;
 import com.service.rent.RentServiceServer.security.dto.RegisterAccountDto;
 import com.service.rent.RentServiceServer.security.jwt.JwtTokenUtil;
 import com.service.rent.RentServiceServer.service.mail.MailSender;
+import com.service.rent.RentServiceServer.service.messenger.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,6 +26,8 @@ import java.util.UUID;
 
 @Service
 public class AccountService {
+
+    private static final String SUPPORT_USERNAME= "support";
 
     @Autowired
     private AccountRepo accountRepo;
@@ -43,6 +46,9 @@ public class AccountService {
 
     @Autowired
     private ComplaintRepo complaintRepo;
+
+    @Autowired
+    private ChatService chatService;
 
     public Iterable<Account> getAccounts() {
         return accountRepo.findAll();
@@ -176,6 +182,10 @@ public class AccountService {
         newAccount.setRefreshTokenKey(jwtTokenUtil.generateTokenKey());
         newAccount.setLocked(false);
         Account savedAccount = saveAccount(newAccount);
+
+        if(!SUPPORT_USERNAME.equals(savedAccount.getUsername())) {
+            chatService.createChat(savedAccount.getUsername(), SUPPORT_USERNAME);
+        }
 
         if (!StringUtils.isEmpty(savedAccount.getEmail())) {
             String message = String.format(

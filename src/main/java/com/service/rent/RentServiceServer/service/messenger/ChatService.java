@@ -34,6 +34,10 @@ public class ChatService {
             return existingChat;
         }
 
+        return createChat(usernameAuthor, usernameGuest);
+    }
+
+    public Chat createChat(String usernameAuthor, String usernameGuest) {
         Chat chat = new Chat();
         chat.setCreatedAt(LocalDateTime.now());
         chat.getAccounts().add(accountService.getByUsername(usernameAuthor));

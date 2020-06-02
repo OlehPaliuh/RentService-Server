@@ -15,6 +15,8 @@ public class AccountDetailsDto {
 
     private String lastName;
 
+    private String username;
+
     private String avatarPath;
 
     private String email;
