@@ -75,7 +75,7 @@ public class CalculateIsMaklerProbability {
 
     private double possibleMaklerSeverityComplaintsFunction(Account landlord) {
         double complaintCount = userComplaintRepo
-                .getAllByComplaintSeverityAndToAccountAndIsDeletedIsFalse(ComplaintSeverity.POSSIBLY_MAKLER, landlord).size();
+                .getAllByComplaintSeverityAndToAccountAndIsDeletedIsFalse(ComplaintSeverity.PROBABLY_MAKLER, landlord).size();
 
         if (complaintCount == 0) {
             return 0;

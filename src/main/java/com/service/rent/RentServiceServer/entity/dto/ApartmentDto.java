@@ -47,4 +47,6 @@ public class ApartmentDto {
     private ApartmentStatus status;
 
     private LocalDateTime statusDateChange;
+
+    private boolean isLocked;
 }

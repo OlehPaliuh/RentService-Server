@@ -28,6 +28,9 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
 
     Long countAccountsByIsLockedTrueAndMaklerProbabilityScoreAfter(Double minimumMps);
 
+    List<Account> getAllByIsLockedTrueAndMaklerProbabilityScoreAfter(Double minimumMps);
+    List<Account> getAllByIsLockedTrueAndMaklerProbabilityScoreBetween(Double minimumMps, Double maxMps);
+
     Long countAccountsByRegisteredAtAfter(LocalDateTime date);
 
     @Modifying

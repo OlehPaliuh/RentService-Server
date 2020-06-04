@@ -46,8 +46,8 @@ public class ApartmentService {
     public List<Apartment> getAll(SortingType sortingType) {
         List<Apartment> result = apartmentRepo.findAll();
         result = result.stream()
-                .filter(apartment -> !apartment.getOwner().isLocked())
-                .collect(Collectors.toList());
+                       .filter(apartment -> !apartment.getOwner().isLocked())
+                       .collect(Collectors.toList());
         return sortApartments(sortingType, result);
     }
 
@@ -129,7 +129,7 @@ public class ApartmentService {
     public List<Apartment> getFilteredApartments(ApartmentFilteringDto apartmentFilter, SortingType sortingType) {
 
         List<Apartment> apartmentsList = apartmentRepo.findAll().stream()
-                                                        .filter(apartment -> !apartment.getOwner().isLocked())
+                                                      .filter(apartment -> !apartment.getOwner().isLocked())
                                                       .filter(a -> !apartmentFilter.isHasPhotos() || a.getImageLinks().size() > 0)
                                                       .filter(a -> !apartmentFilter.getAllowPets() || a.isAllowPets())
                                                       .filter(a -> !apartmentFilter.isNewBuilding() ||
@@ -202,18 +202,19 @@ public class ApartmentService {
 
         Apartment apartment = apartmentRepo.getApartmentById(apartmentId);
 
-        if(apartment == null) {
+        if (apartment == null) {
             throw new NotFoundException("Apartment not found");
         }
 
-        if(apartment.getOwner() != null && apartment.getOwner().getId() != null && apartment.getOwner().getId().equals(accountDetailsDto.getId())) {
+        if (apartment.getOwner() != null && apartment.getOwner().getId() != null && apartment.getOwner().getId().equals(
+                accountDetailsDto.getId())) {
 
             Account account = accountRepo.getAccountById(accountDetailsDto.getId());
 
             account.setOwningApartmentsCount(account.getOwningApartmentsCount() > 0 ? account.getOwningApartmentsCount() - 1 : 0);
             accountRepo.save(account);
 
-            for(String link : apartment.getImageLinks()) {
+            for (String link : apartment.getImageLinks()) {
                 imageService.deleteObjectFromS3(accountDetailsDto.getId(), link);
             }
 
@@ -226,7 +227,8 @@ public class ApartmentService {
 
     public Apartment toggleLock(Long id) {
         Apartment apartment = getApartmentById(id);
-        apartment.setIsLocked(!apartment.getIsLocked());
+        boolean currentLockStatus = apartment.getIsLocked() != null ? apartment.getIsLocked() : false;
+        apartment.setIsLocked(!currentLockStatus);
         return apartmentRepo.saveAndFlush(apartment);
     }
 }
